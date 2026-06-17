@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="hy">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Michelle | Մեր մասին</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #000;
+            color: #d4af37;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* Գլխավոր էջ կոճակի ոճը */
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 10px 20px;
+            background-color: transparent;
+            color: #d4af37;
+            border: 1px solid #d4af37;
+            text-decoration: none;
+            font-size: 0.9rem;
+            border-radius: 5px;
+            transition: 0.3s;
+        }
+
+        .back-btn:hover {
+            background-color: #d4af37;
+            color: #000;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 600px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .main-logo { width: 300px; max-width: 100%; height: auto; margin-bottom: 20px; }
+
+        h1 { text-transform: uppercase; letter-spacing: 2px; border-bottom: 1px solid #d4af37; display: inline-block; padding-bottom: 5px; font-size: 1.5rem; }
+
+        .about-text { color: #c0c0c0; line-height: 1.5; margin: 15px 0; }
+
+        .installment-box {
+            display: flex; flex-wrap: wrap; align-items: center; justify-content: center;
+            gap: 10px; margin: 20px 0; padding: 15px; border: 1px solid #d4af37; border-radius: 10px;
+        }
+
+        .mini-logo { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; }
+
+        .contact-info { margin-top: 20px; padding-top: 15px; border-top: 1px solid #d4af37; font-size: 0.9rem; }
+        
+        a { color: #d4af37; text-decoration: none; }
+
+        @media (max-width: 480px) {
+            .back-btn { left: 10px; padding: 8px 15px; font-size: 0.8rem; }
+            .installment-box { flex-direction: column; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+
+    <a href="index.html" class="back-btn">← Գլխավոր</a>
+
+    <div class="container">
+        <img src="9004.jpg" alt="Michelle" class="main-logo">
+        
+        <h1>Մեր մասին</h1>
+        
+        <p class="about-text">
+            Մենք ստեղծում ենք բացառիկ բույրեր, որոնք ընդգծում են ձեր յուրահատկությունն ու ոճը։ Յուրաքանչյուր կաթիլ պատմում է իր պատմությունը։
+        </p>
+
+        <div class="installment-box">
+            <img src="8834.jpg" alt="Cash me" class="mini-logo">
+            <div class="installment-text">Մեզ մոտ գործում է ՄԱՍ-ՄԱՍ վճարման համակարգ՝ ՀԵՇՏ ՈՒ ԱՐԱԳ։</div>
+        </div>
+
+        <div class="contact-info">
+            <div class="contact-item">📍 ք. Երևան, Կենտրոն, Տերյան 12</div>
+            <div class="contact-item">✉️ <a href="mailto:info@michelle.am">info@michelle.am</a></div>
+            <div class="contact-item">📞 <a href="tel:+37499000000">+374 99 00 00 00</a></div>
+        </div>
+    </div>
+
+</body>
+</html>
