@@ -1,1 +1,607 @@
+<!DOCTYPE html>
+<html lang="hy">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Michelle Perfume | Official Store</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <link rel="stylesheet" href="style.css">
 
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <script type="text/javascript">
+        (function() {
+            emailjs.init("rZBr8xgK7orV2Zi8C");
+        })();
+    </script>
+
+    <style>
+        .products-section { padding: 60px 0; background-color: #ffffff; }
+        .section-title { text-align: center; font-size: 28px; margin-bottom: 40px; text-transform: uppercase; letter-spacing: 1px; }
+        
+        .products-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+        @media (min-width: 768px) { .products-grid { grid-template-columns: repeat(4, 1fr); gap: 30px; } }
+        
+        .product-card { background: #fff; border-radius: 12px; padding: 10px; transition: transform 0.3s; display: flex; flex-direction: column; cursor: pointer; border: 1px solid #f0f0f0; }
+        .product-card:hover { transform: translateY(-5px); box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        .product-img { width: 100%; height: 220px; object-fit: cover; border-radius: 8px; background-color: #E2DEF7; }
+        .product-info { margin-top: 12px; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; }
+        .product-title { font-size: 16px; font-weight: 600; margin-bottom: 5px; }
+        .product-meta-preview { font-size: 12px; color: #888; margin-bottom: 5px; }
+        
+        .product-price-box { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-size: 15px; }
+        .product-price { font-weight: 700; color: #1a1a1a; }
+        .product-price.has-sale { text-decoration: line-through; color: #888; font-size: 13px; font-weight: 400; }
+        .product-sale-price { font-weight: 700; color: #ff3b30; }
+
+        .card-view-btn { background: #000; color: #fff; border: none; padding: 10px; border-radius: 50px; font-weight: 500; font-size: 13px; width: 100%; margin-top: 10px; }
+
+        .filter-btn { background: #f0f0f0; color: #333; border: none; padding: 8px 20px; border-radius: 50px; font-weight: 500; font-size: 14px; cursor: pointer; margin: 4px; transition: 0.2s; font-family: inherit; }
+        .filter-btn.active { background: #000; color: #fff; }
+        .filter-btn:hover:not(.active) { background: #ddd; }
+
+        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); backdrop-filter: blur(5px); display: none; justify-content: center; align-items: center; z-index: 2000; padding: 10px; }
+        .modal.active { display: flex; }
+        .modal-content { background: #fff; padding: 25px; border-radius: 16px; width: 95%; max-width: 440px; position: relative; max-height: 90vh; overflow-y: auto; scrollbar-width: none; }
+        .modal-content::-webkit-scrollbar { display: none; }
+        
+        .modal-title { font-size: 22px; font-weight: 700; margin-bottom: 12px; margin-top: 5px; }
+        .modal-close { position: absolute; top: 15px; right: 15px; font-size: 20px; cursor: pointer; background: #fff; border: none; z-index: 10; width: 30px; height: 30px; border-radius: 50px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); display: flex; align-items: center; justify-content: center; }
+        
+        .modal-main-img { width: 100%; max-height: 280px; object-fit: cover; border-radius: 12px; margin-bottom: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
+        
+        .modal-product-details { background: #f8f9fa; padding: 15px; border-radius: 10px; margin-bottom: 20px; font-size: 14px; border: 1px solid #eaeaec; }
+        .modal-product-details p { margin-bottom: 4px; color: #555; }
+        .modal-product-details span { font-weight: 600; color: #000; }
+
+        .dynamic-price-box { background: #eef2f5; padding: 12px; border-radius: 8px; text-align: center; margin-bottom: 5px; margin-top: 15px;}
+        .dynamic-price-box .price-label { font-size: 13px; color: #666; text-transform: uppercase; letter-spacing: 1px;}
+        
+        .modal-prices-display { display: flex; justify-content: center; align-items: center; gap: 10px; margin-top: 5px; }
+        .price-value { font-size: 24px; font-weight: 700; color: #000; }
+        .price-value.old-struck { text-decoration: line-through; color: #888; font-size: 18px; font-weight: 500; }
+        .price-value.new-sale { color: #ff3b30; }
+
+        .credit-hint { font-size: 12px; color: #777777; text-align: center; margin-bottom: 15px; font-weight: 500; display: block; }
+
+        .modal-input { width: 100%; padding: 12px; border: 1px solid #EAEAEC; border-radius: 8px; margin-bottom: 15px; font-family: inherit; outline: none; }
+        .modal-input:focus { border-color: #000; }
+        select.modal-input { cursor: pointer; font-weight: 600; }
+
+        .modal-action-btns { display: flex; gap: 10px; margin-top: 10px; }
+        .btn-secondary { background: #222; color: #fff; border: none; padding: 12px; border-radius: 8px; font-weight: 600; font-size: 14px; width: 100%; cursor: pointer; transition: 0.2s; }
+        .btn-secondary:hover { background: #444; }
+
+        .cart-items-list { margin-bottom: 20px; }
+        .cart-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #eee; font-size: 14px; }
+        .cart-item-info { flex-grow: 1; padding-right: 10px; }
+        .cart-item-title { font-weight: 600; color: #000; }
+        .cart-item-meta { font-size: 12px; color: #666; }
+        .cart-item-price { font-weight: 700; color: #000; white-space: nowrap; }
+        .btn-remove-cart { background: none; border: none; color: #ff3b30; cursor: pointer; font-size: 16px; margin-left: 10px; font-weight: bold; }
+        .cart-empty-text { text-align: center; color: #888; padding: 20px 0; font-size: 15px; }
+
+        .heroSwiper { width: 100%; max-width: 600px; margin: 0 auto; }
+        .swiper-slide img { width: 100%; height: 350px; object-fit: cover; border-radius: 12px; }
+    </style>
+</head>
+<body>
+
+    <header class="main-header">
+        <div class="container header-flex">
+            <button class="burger-menu" id="burgerToggle" aria-label="Menu"><span></span><span></span></button>
+            <div class="logo"><a href="javascript:void(0)">Michelle</a></div>
+            <nav class="nav-menu desktop-only">
+                <ul><li><a href="index.html" class="active">Գլխավոր</a></li><li><a href="com.html">Մեր մասին</a></li></ul>
+            </nav>
+            <div class="header-actions"><a href="#" class="cart-btn" id="openCartBtn"><span class="cart-text">Զամբյուղ</span> (<span id="cartCount">0</span>)</a></div>
+        </div>
+    </header>
+
+       <div class="mobile-nav-overlay" id="mobileMenu">
+        <ul class="mobile-menu-links"><li><a href="index.html">Գլխավոր</a></li>
+        <li><a href="com.html" class="about-btn-link">Մեր մասին</a></li>
+        </ul>
+    </div>
+
+    <section class="hero-section">
+        <div class="container hero-grid">
+            <div class="hero-content">
+                <span class="subtitle">Sophisticated Fluidity</span>
+                <h1 class="hero-title">Բացահայտիր քո նոր բուրմունքը</h1>
+                <p class="hero-desc">Մինիմալիստական էսթետիկա և նրբագեղ հոսունություն՝ յուրաքանչյուր կաթիլում։</p>
+                <a href="#catalog" class="btn-primary">Դիտել կատալոգը</a>
+            </div>
+            <div class="hero-image">
+                <div class="swiper heroSwiper"><div class="swiper-wrapper" id="hero-slider-wrapper"></div><div class="swiper-pagination"></div></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="products-section" id="catalog">
+        <div class="container">
+            <h2 class="section-title">Մեր Տեսականին</h2>
+            
+<input type="text" id="searchInput" placeholder="Որոնել ապրանքներ...">
+            <div class="filters" style="text-align: center; margin-bottom: 30px;">
+                <button class="filter-btn active" data-filter="all">Բոլորը</button>
+                <button class="filter-btn" data-filter="Կանացի">Կանացի</button>
+                <button class="filter-btn" data-filter="Տղամարդու">Տղամարդու</button>
+                <button class="filter-btn" data-filter="Unisex">Unisex</button>
+                <select id="priceSort" style="padding: 8px; border-radius: 20px; border: 1px solid #ddd; outline: none;">
+                    <option value="default">Գինը</option>
+                    <option value="asc">Աճման</option>
+                    <option value="desc">Նվազման</option>
+                </select>
+            </div>
+            <div class="products-grid" id="products-container"></div>
+        </div>
+    </section>
+
+    
+    <div class="modal" id="orderModal">
+        <div class="modal-content">
+            <button class="modal-close" id="closeModal">✕</button>
+            <img id="modalProductImg" src="" alt="Michelle" class="modal-main-img">
+            <h3 class="modal-title" id="modalProductTitle">Անուն</h3>
+            <div class="modal-product-details">
+                <p>Ապրանքանիշ (Բրենդ): <span id="detBrand">---</span></p>
+                <p>Նախատեսված է: <span id="detGender">---</span></p>
+                <p style="margin-top: 15px; font-weight: 600; color: #000;">Ընտրեք ծավալը (մլ):</p>
+                <select id="detMlSelect" class="modal-input" style="margin-bottom: 5px;"></select>
+                <div class="dynamic-price-box">
+                    <div class="price-label">Ընդհանուր Արժեքը</div>
+                    <div class="modal-prices-display">
+                        <span class="price-value" id="detPriceOld"></span>
+                        <span class="price-value" id="detPrice">0</span> 
+                        <span style="font-weight: 600; color: #000;">AMD</span>
+                    </div>
+                </div>
+                <span class="credit-hint">*  Գործում է ապառիկի ձևակերպում</span>
+            </div>
+            <input type="text" id="customerName" class="modal-input" placeholder="Ձեր Անունը...">
+            <input type="tel" id="customerPhone" class="modal-input" placeholder="Ձեր Հեռախոսահամարը...">
+            <div class="modal-action-btns">
+                <button id="addToCartBtn" class="btn-secondary">Ավելացնել զամբյուղ</button>
+                <button id="submitOrderBtn" class="btn-primary" style="width: 100%; border: none; cursor: pointer;">Գնել հիմա</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="cartModal">
+        <div class="modal-content">
+            <button class="modal-close" id="closeCartModalBtn">✕</button>
+            <h3 class="modal-title">Ձեր Զամբյուղը</h3>
+            <div class="cart-items-list" id="cartItemsContainer"></div>
+            <div class="dynamic-price-box">
+                <div class="price-label">Զամբյուղի Ընդհանուր Գումարը</div>
+                <span class="price-value" id="cartTotalSum">0</span> <span>AMD</span>
+            </div>
+            <span class="credit-hint">* Գործում է ապառիկի ձևակերպում</span>
+            <div id="cartOrderForm">
+                <input type="text" id="cartCustomerName" class="modal-input" placeholder="Ձեր Անունը...">
+                <input type="tel" id="cartCustomerPhone" class="modal-input" placeholder="Ձեր Հեռախոսահամարը...">
+                <button id="submitCartOrderBtn" class="btn-primary" style="width: 100%; border: none; cursor: pointer;">Պատվիրել Զամբյուղից</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="adminLoginModal">
+        <div class="modal-content">
+            <button class="modal-close" id="closeAdminModalBtn">✕</button>
+            <h3 class="modal-title">Մուտք Ադմին Համակարգ</h3>
+            <p style="margin-bottom: 15px; font-size: 14px; color: #666;">Մուտք գործելու համար ներմուծեք գաղտնաբառը։</p>
+            <input type="password" id="adminPassInput" class="modal-input" placeholder="Գաղտնաբառ...">
+            <button id="adminLoginBtn" class="btn-primary" style="width: 100%; border: none; cursor: pointer;">Մուտք Գործել</button>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+        import { getDatabase, ref, onValue, push, query, limitToFirst, startAfter, get } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDDIyOC18ezuMB1dnPaap9FohRGU62OsrY",
+            authDomain: "michele-fcaf7.firebaseapp.com",
+            projectId: "michele-fcaf7",
+            storageBucket: "michele-fcaf7.firebasestorage.app",
+            messagingSenderId: "94596268135",
+            appId: "1:94596268135:web:fb84cda9f2e427199814c2",
+            databaseURL: "https://michele-fcaf7-default-rtdb.firebaseio.com"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        let cart = [];
+        let allProducts = [];
+        let activeFilter = 'all';
+
+        document.getElementById('burgerToggle').addEventListener('click', function() {
+            this.classList.toggle('open');
+            document.getElementById('mobileMenu').classList.toggle('open');
+        });
+
+
+
+
+        
+        let swiperInstance = null;
+        onValue(ref(db, 'slider'), (snapshot) => {
+            const data = snapshot.val() || {};
+            const wrapper = document.getElementById('hero-slider-wrapper');
+            wrapper.innerHTML = '';
+            const keys = Object.keys(data);
+            const slidesCount = keys.length;
+            if (slidesCount === 0) return;
+            Object.values(data).forEach(item => {
+                const url = typeof item === 'object' ? item.img : item;
+                wrapper.innerHTML += `<div class="swiper-slide"><img src="${url}" alt="Michelle"></div>`;
+            });
+            if (swiperInstance) swiperInstance.destroy();
+            swiperInstance = new Swiper('.heroSwiper', { 
+                loop: slidesCount >= 3, 
+                autoplay: { delay: 4000 }, 
+                pagination: { el: '.swiper-pagination', clickable: true },
+                slidesPerView: 1,
+                spaceBetween: 10,
+                grabCursor: true
+            });
+        });
+
+        function filterProducts(filterValue) {
+            if (filterValue) activeFilter = filterValue;
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.filter === activeFilter);
+            });
+
+            let filtered = activeFilter === 'all'
+                ? [...allProducts]
+                : allProducts.filter(p => (p.gender || 'Unisex') === activeFilter);
+
+            const sortValue = document.getElementById('priceSort') ? document.getElementById('priceSort').value : 'default';
+            if (sortValue === 'asc') {
+                filtered.sort((a, b) => {
+                    const priceA = Number(a.salePrice && a.salePrice > 0 ? a.salePrice : a.price);
+                    const priceB = Number(b.salePrice && b.salePrice > 0 ? b.salePrice : b.price);
+                    return priceA - priceB;
+                });
+            } else if (sortValue === 'desc') {
+                filtered.sort((a, b) => {
+                    const priceA = Number(a.salePrice && a.salePrice > 0 ? a.salePrice : a.price);
+                    const priceB = Number(b.salePrice && b.salePrice > 0 ? b.salePrice : b.price);
+                    return priceB - priceA;
+                });
+            }
+            renderProducts(filtered);
+        }
+
+        function renderProducts(products) {
+            const container = document.getElementById('products-container');
+            container.innerHTML = '';
+            if (products.length === 0) {
+                container.innerHTML = '<p style="text-align:center; color:#888; grid-column:1/-1; padding:40px 0;">Ապրանք չի գտնվել</p>';
+                return;
+            }
+            products.forEach(prod => {
+                let priceHTML = '';
+                if (prod.salePrice && Number(prod.salePrice) > 0) {
+                    priceHTML = `<span class="product-price has-sale">${prod.price} AMD</span><span class="product-sale-price">${prod.salePrice} AMD</span>`;
+                } else {
+                    priceHTML = `<span class="product-price">${prod.price} AMD</span>`;
+                }
+                const pinnedBadge = prod.pinned ? `<span style="position:absolute; background:#ff3b30; color:#fff; font-size:10px; padding:3px 8px; border-radius:20px; margin:5px; font-weight:700; z-index:1;">TOP</span>` : '';
+                const card = document.createElement('div');
+                card.className = 'product-card';
+                card.style.position = 'relative';
+                card.innerHTML = `
+                    ${pinnedBadge}
+                    <img src="${prod.img}" class="product-img" loading="lazy" alt="${prod.title}">
+                    <div class="product-info">
+                        <div>
+                            <h3 class="product-title">${prod.title}</h3>
+                            <div class="product-meta-preview">${prod.brand || ''} | ${prod.ml || ''} մլ</div>
+                        </div>
+                        <div class="product-price-box">${priceHTML}</div>
+                        <button class="card-view-btn">Մանրամասն</button>
+                    </div>
+                `;
+                card.addEventListener('click', () => openProductModal(prod));
+                container.appendChild(card);
+            });
+        }
+
+        let selectedProduct = null;
+        let currentPricePerMl = 0;
+        let currentSalePricePerMl = 0;
+        let lastLoadedKey = null;
+        let isLoadingProducts = false;
+        let allLoaded = false;
+        const PRODUCTS_LIMIT = 20;
+        const productsRef = ref(db, 'products');
+
+        async function loadProductsPage() {
+            if (isLoadingProducts || allLoaded) return;
+            isLoadingProducts = true;
+
+            let dbQuery;
+            if (!lastLoadedKey) {
+                dbQuery = query(productsRef, limitToFirst(PRODUCTS_LIMIT));
+            } else {
+                dbQuery = query(productsRef, startAfter(lastLoadedKey), limitToFirst(PRODUCTS_LIMIT));
+            }
+
+            try {
+                const snapshot = await get(dbQuery);
+                if (snapshot.exists()) {
+                    const data = snapshot.val();
+                    const keys = Object.keys(data);
+                    if (keys.length < PRODUCTS_LIMIT) allLoaded = true;
+                    lastLoadedKey = keys[keys.length - 1];
+
+                    let newProducts = keys
+                        .map(key => ({ id: key, ...data[key] }))
+                        // ── inStock === false եղածները բաց ենք թողնում ──
+                        .filter(p => p.inStock !== false);
+
+                    allProducts = allProducts.concat(newProducts);
+                    allProducts.sort((a, b) => {
+                        const aPinned = a.pinned === true ? 1 : 0;
+                        const bPinned = b.pinned === true ? 1 : 0;
+                        return bPinned - aPinned;
+                    });
+                    filterProducts(activeFilter);
+                }
+            } catch (error) {
+                console.error("Error fetching products:", error);
+            } finally {
+                isLoadingProducts = false;
+            }
+        }
+
+        function openProductModal(prod) {
+            selectedProduct = prod;
+            document.getElementById('modalProductImg').src = prod.img;
+            document.getElementById('modalProductTitle').innerText = prod.title;
+            document.getElementById('detBrand').innerText = prod.brand || '---';
+            document.getElementById('detGender').innerText = prod.gender || 'Unisex';
+            const baseMl = Number(prod.ml);
+            const basePrice = Number(prod.price);
+            currentPricePerMl = basePrice / baseMl;
+            currentSalePricePerMl = (prod.salePrice && Number(prod.salePrice) > 0) ? Number(prod.salePrice) / baseMl : 0;
+            const mlSelect = document.getElementById('detMlSelect');
+            mlSelect.innerHTML = '';
+            let optionsArray = prod.sizes && Array.isArray(prod.sizes) ? prod.sizes : [baseMl];
+            optionsArray.sort((a, b) => a - b);
+            optionsArray.forEach(ml => {
+                const option = document.createElement('option');
+                option.value = ml;
+                option.text = `${ml} մլ`;
+                mlSelect.appendChild(option);
+            });
+            mlSelect.value = optionsArray[0];
+            updateModalPriceDisplay(optionsArray[0]);
+            document.getElementById('orderModal').classList.add('active');
+        }
+
+        window.addEventListener('scroll', () => {
+            if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 600) {
+                loadProductsPage();
+            }
+        });
+
+        loadProductsPage();
+
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => filterProducts(btn.dataset.filter));
+        });
+
+        function updateModalPriceDisplay(ml) {
+            const oldPriceContainer = document.getElementById('detPriceOld');
+            const currentPriceContainer = document.getElementById('detPrice');
+            if (currentSalePricePerMl > 0) {
+                const calculatedOldPrice = Math.round(ml * currentPricePerMl);
+                const calculatedNewPrice = Math.round(ml * currentSalePricePerMl);
+                oldPriceContainer.innerText = calculatedOldPrice + " AMD";
+                oldPriceContainer.className = "price-value old-struck";
+                oldPriceContainer.style.display = "inline";
+                currentPriceContainer.innerText = calculatedNewPrice;
+                currentPriceContainer.className = "price-value new-sale";
+            } else {
+                const calculatedPrice = Math.round(ml * currentPricePerMl);
+                oldPriceContainer.style.display = "none";
+                currentPriceContainer.innerText = calculatedPrice;
+                currentPriceContainer.className = "price-value";
+            }
+        }
+
+        document.getElementById('detMlSelect').addEventListener('change', function() {
+            updateModalPriceDisplay(Number(this.value));
+        });
+
+        document.getElementById('addToCartBtn').addEventListener('click', () => {
+            if (selectedProduct) {
+                const finalMl = document.getElementById('detMlSelect').value;
+                const finalPrice = Number(document.getElementById('detPrice').innerText);
+                cart.push({ title: selectedProduct.title, brand: selectedProduct.brand || '', gender: selectedProduct.gender || 'Unisex', ml: finalMl, price: finalPrice });
+                updateCartUI();
+                alert('Ապրանքն ավելացվեց զամբյուղի մեջ։');
+                document.getElementById('orderModal').classList.remove('active');
+            }
+        });
+
+        function updateCartUI() {
+            document.getElementById('cartCount').innerText = cart.length;
+            const container = document.getElementById('cartItemsContainer');
+            container.innerHTML = '';
+            if (cart.length === 0) {
+                container.innerHTML = '<p class="cart-empty-text">Ձեր զամբյուղը դատարկ է:</p>';
+                document.getElementById('cartTotalSum').innerText = 0;
+                document.getElementById('cartOrderForm').style.display = 'none';
+                return;
+            }
+            document.getElementById('cartOrderForm').style.display = 'block';
+            let totalSum = 0;
+            cart.forEach((item, index) => {
+                totalSum += item.price;
+                const div = document.createElement('div');
+                div.className = 'cart-item';
+                div.innerHTML = `
+                    <div class="cart-item-info">
+                        <div class="cart-item-title">${item.brand} ${item.title}</div>
+                        <div class="cart-item-meta">${item.ml} մլ | [${item.gender}]</div>
+                    </div>
+                    <div class="cart-item-price">${item.price} AMD</div>
+                    <button class="btn-remove-cart" data-index="${index}">✕</button>
+                `;
+                container.appendChild(div);
+            });
+            document.getElementById('cartTotalSum').innerText = totalSum;
+            document.querySelectorAll('.btn-remove-cart').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    cart.splice(Number(this.dataset.index), 1);
+                    updateCartUI();
+                });
+            });
+        }
+
+
+
+
+        function sendEmailNotification(name, phone, items, total, date) {
+            emailjs.send("service_05dsggr", "template_utk2s95", {
+                customer_name: name,
+                customer_phone: phone,
+                order_items: items,
+                total_price: total + " AMD",
+                order_date: date,
+                email: "michelle.perfume2@gmail.com"
+            }).then(
+                r => console.log("Email ուղարկվեց!", r.status),
+                e => console.error("Email սխալ", e)
+            );
+        }
+
+        document.getElementById('submitCartOrderBtn').addEventListener('click', () => {
+            const name = document.getElementById('cartCustomerName').value.trim();
+            const phone = document.getElementById('cartCustomerPhone').value.trim();
+            if (name && phone && cart.length > 0) {
+                const currentDate = new Date().toLocaleDateString('hy-AM');
+                const finalItemsString = cart.map(i => `${i.brand} ${i.title} (${i.ml}մլ)`).join(' + ');
+                const finalTotal = Number(document.getElementById('cartTotalSum').innerText);
+                push(ref(db, 'orders'), { name, phone, items: finalItemsString, total: finalTotal, date: currentDate }).then(() => {
+                    sendEmailNotification(name, phone, finalItemsString, finalTotal, currentDate);
+                    alert('Ձեր զամբյուղի պատվերն ընդունված է։ Շնորհակալություն։Մեր աշխատակիցը շուտով կկապնվի ձեզ հետ');
+                    cart = [];
+                    updateCartUI();
+                    document.getElementById('cartCustomerName').value = '';
+                    document.getElementById('cartCustomerPhone').value = '';
+                    document.getElementById('cartModal').classList.remove('active');
+                });
+            } else {
+                alert('Խնդրում ենք լրացնել անունը և հեռախոսահամարը։');
+            }
+        });
+
+        document.getElementById('submitOrderBtn').addEventListener('click', () => {
+            const name = document.getElementById('customerName').value.trim();
+            const phone = document.getElementById('customerPhone').value.trim();
+            if (name && phone && selectedProduct) {
+                const finalMl = document.getElementById('detMlSelect').value;
+                const finalPrice = document.getElementById('detPrice').innerText;
+                const currentDate = new Date().toLocaleDateString('hy-AM');
+                const orderItemInfo = `${selectedProduct.brand || ''} ${selectedProduct.title} (${finalMl} մլ) [${selectedProduct.gender || 'Unisex'}]`;
+                push(ref(db, 'orders'), { name, phone, items: orderItemInfo, total: Number(finalPrice), date: currentDate }).then(() => {
+                    sendEmailNotification(name, phone, orderItemInfo, finalPrice, currentDate);
+                    alert('Ձեր պատվերն ընդունված է։ Շնորհակալություն գնումների համար:Մեր աշխատակիցը շուտով կկապնվի ձեզ հետ');
+                    document.getElementById('customerName').value = '';
+                    document.getElementById('customerPhone').value = '';
+                    document.getElementById('orderModal').classList.remove('active');
+                });
+            } else {
+                alert('Խնդրում ենք լրացնել անունը և հեռախոսահամարը։');
+            }
+        });
+
+        const cartModal = document.getElementById('cartModal');
+        document.getElementById('openCartBtn').addEventListener('click', (e) => {
+            e.preventDefault();
+            updateCartUI();
+            cartModal.classList.add('active');
+        });
+        document.getElementById('closeCartModalBtn').addEventListener('click', () => cartModal.classList.remove('active'));
+
+        const orderModal = document.getElementById('orderModal');
+        const adminModal = document.getElementById('adminLoginModal');
+        document.getElementById('closeModal').addEventListener('click', () => orderModal.classList.remove('active'));
+        document.getElementById('closeAdminModalBtn').addEventListener('click', () => adminModal.classList.remove('active'));
+        window.addEventListener('click', (e) => {
+            if (e.target === orderModal) orderModal.classList.remove('active');
+            if (e.target === adminModal) adminModal.classList.remove('active');
+            if (e.target === cartModal) cartModal.classList.remove('active');
+        });
+
+        document.querySelector('.logo').addEventListener('click', (e) => {
+            e.preventDefault();
+            adminModal.classList.add('active');
+        });
+
+        document.getElementById('adminLoginBtn').addEventListener('click', checkAdminPass);
+        document.getElementById('adminPassInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') checkAdminPass();
+        });
+
+        function checkAdminPass() {
+            if (document.getElementById('adminPassInput').value === "asd777lkj") {
+                window.location.href = "admin.html";
+            } else {
+                alert("Սխալ գաղտնաբառ");
+            }
+        }
+
+        document.getElementById('priceSort').addEventListener('change', () => {
+            filterProducts();
+        });
+
+
+
+    
+
+    // Ահա որոնման ֆունկցիան
+    function searchProducts() {
+        let input = document.getElementById('searchInput').value.toLowerCase();
+        let productList = document.querySelectorAll('.product-card'); 
+
+        productList.forEach(card => {
+            let title = card.querySelector('h3').innerText.toLowerCase(); 
+            card.style.display = title.includes(input) ? "" : "none";
+        });
+    }
+
+    // Այս տողն է ապահովում, որ ֆունկցիան կաշխատի
+    document.getElementById('searchInput').addEventListener('keyup', searchProducts);
+  
+    </script>
+
+<footer class="footer-section">
+    <div class="container">
+        <div class="footer-grid">
+            <div class="footer-box">
+                <h3>Մեր մասին</h3>
+                <p>Michelle Perfume-ը առաջարկում է բարձրակարգ պարֆյումերիա՝ նրբագեղ հոսունությամբ և մինիմալիստական էսթետիկայով։ Յուրաքանչյուր բույր ընտրված է ձեր անհատականությունը ընդգծելու համար։</p>
+            </div>
+            <div class="footer-box">
+                <h3>Կապ մեզ հետ</h3>
+                <p>📞 Հեռ.: +374 00 000 000</p>
+                <p>📍 Հասցե: ք. Երևան, փողոցի անուն 1</p>
+                <p>📧 Gmail: yourname@gmail.com</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            &copy; 2026 Michelle Perfume. Բոլոր իրավունքները պաշտպանված են։
+        </div>
+    </div>
+</footer>
+</body>
+</html>
