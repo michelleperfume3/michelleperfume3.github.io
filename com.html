@@ -8,8 +8,8 @@
         body {
             margin: 0;
             padding: 0;
-            background-color: #000;
-            color: #d4af37;
+            background-color: #ffffff; /* Փոխված է սպիտակի */
+            color: #b58d1d; /* Ոսկեգույնը մի փոքր մուգ է արված սպիտակ ֆոնի վրա լավ երևալու համար */
             font-family: 'Segoe UI', Arial, sans-serif;
             display: flex;
             justify-content: center;
@@ -25,8 +25,8 @@
             left: 20px;
             padding: 10px 20px;
             background-color: transparent;
-            color: #d4af37;
-            border: 1px solid #d4af37;
+            color: #b58d1d;
+            border: 1px solid #b58d1d;
             text-decoration: none;
             font-size: 0.9rem;
             border-radius: 5px;
@@ -34,8 +34,8 @@
         }
 
         .back-btn:hover {
-            background-color: #d4af37;
-            color: #000;
+            background-color: #b58d1d;
+            color: #ffffff; /* Հովերի ժամանակ տեքստը դառնում է սպիտակ */
         }
 
         .container {
@@ -47,20 +47,21 @@
 
         .main-logo { width: 300px; max-width: 100%; height: auto; margin-bottom: 20px; }
 
-        h1 { text-transform: uppercase; letter-spacing: 2px; border-bottom: 1px solid #d4af37; display: inline-block; padding-bottom: 5px; font-size: 1.5rem; }
+        h1 { text-transform: uppercase; letter-spacing: 2px; border-bottom: 1px solid #b58d1d; display: inline-block; padding-bottom: 5px; font-size: 1.5rem; }
 
-        .about-text { color: #c0c0c0; line-height: 1.5; margin: 15px 0; }
+        .about-text { color: #444444; line-height: 1.5; margin: 15px 0; } /* Մոխրագույն տեքստ՝ ընթեռնելիության համար */
 
         .installment-box {
             display: flex; flex-wrap: wrap; align-items: center; justify-content: center;
-            gap: 10px; margin: 20px 0; padding: 15px; border: 1px solid #d4af37; border-radius: 10px;
+            gap: 10px; margin: 20px 0; padding: 15px; border: 1px solid #b58d1d; border-radius: 10px;
+            color: #444444; /* Մուգ տեքստ տուփի ներսում */
         }
 
         .mini-logo { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; }
 
-        .contact-info { margin-top: 20px; padding-top: 15px; border-top: 1px solid #d4af37; font-size: 0.9rem; }
+        .contact-info { margin-top: 20px; padding-top: 15px; border-top: 1px solid #b58d1d; font-size: 0.9rem; color: #444444; }
         
-        a { color: #d4af37; text-decoration: none; }
+        a { color: #b58d1d; text-decoration: none; }
 
         @media (max-width: 480px) {
             .back-btn { left: 10px; padding: 8px 15px; font-size: 0.8rem; }
