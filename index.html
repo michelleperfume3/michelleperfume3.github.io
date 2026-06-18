@@ -185,22 +185,29 @@
         </div>
     </div>
 
-    <div class="modal" id="adminLoginModal">
+   <div class="modal" id="adminLoginModal">
         <div class="modal-content">
             <button class="modal-close" id="closeAdminModalBtn">✕</button>
             <h3 class="modal-title">Մուտք Ադմին Համակարգ</h3>
-            <p style="margin-bottom: 15px; font-size: 14px; color: #666;">Մուտք գործելու համար ներմուծեք գաղտնաբառը։</p>
-            <input type="password" id="adminPassInput" class="modal-input" placeholder="Գաղտնաբառ...">
-            <button id="adminLoginBtn" class="btn-primary" style="width: 100%; border: none; cursor: pointer;">Մուտք Գործել</button>
+            <p style="margin-bottom: 15px; font-size: 14px; color: #666;">Մուտք գործելու համար ներմուծեք ձեր տվյալները։</p>
+            
+            <input type="email" id="adminEmailInput" class="modal-input" placeholder="Էլ. հասցե (Email)..." style="width: 100%; margin-bottom: 10px; padding: 12px; border: 1px solid #EAEAEC; border-radius: 8px; box-sizing: border-box;">
+            
+            <input type="password" id="adminPassInput" class="modal-input" placeholder="Գաղտնաբառ..." style="width: 100%; margin-bottom: 15px; padding: 12px; border: 1px solid #EAEAEC; border-radius: 8px; box-sizing: border-box;">
+            
+            <button id="adminLoginBtn" class="btn-primary" style="width: 100%; border: none; cursor: pointer; padding: 12px; border-radius: 8px;">Մուտք Գործել</button>
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
         import { getDatabase, ref, onValue, push, query, limitToFirst, startAfter, get } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+        // Նոր տող Auth-ի համար
+        import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
-  const firebaseConfig = {
+        const firebaseConfig = {
             apiKey: "AIzaSyB0AdCONK1U2RG2z-PkqLTkUKr0QXBF_28",
             authDomain: "michelle3-989c5.firebaseapp.com",
             databaseURL: "https://michelle3-989c5-default-rtdb.firebaseio.com",
@@ -210,8 +217,11 @@
             appId: "1:218382653099:web:b5f405c4be41bc6d6189ee",
             measurementId: "G-WDQ3G0701Z"
         };
+
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
+        // Նոր տող Auth-ն ակտիվացնելու համար
+        const auth = getAuth(app); 
 
         let cart = [];
         let allProducts = [];
@@ -551,13 +561,46 @@
             if (e.key === 'Enter') checkAdminPass();
         });
 
-        function checkAdminPass() {
-            if (document.getElementById('adminPassInput').value === "asd777lkj") {
-                window.location.href = "admin.html";
-            } else {
-                alert("Սխալ գաղտնաբառ");
+
+
+function checkAdminPass() {
+            const email = document.getElementById('adminEmailInput').value.trim();
+            const password = document.getElementById('adminPassInput').value.trim();
+            
+            // Սա այն էլ․ հասցեն է, որը ստեղծելու ես Firebase Console-ում
+            const ADMIN_EMAIL = "ghazar.asatryan@gmail.com"; 
+
+            if (!email || !password) {
+                alert("Խնդրում ենք լրացնել բոլոր դաշտերը։");
+                return;
             }
+
+            // Ստուգում ենք՝ արդյոք մուտքագրված էլ․ հասցեն համընկնում է ադմինի հասցեի հետ
+            if (email !== ADMIN_EMAIL) {
+                alert("Այս էլ. հասցեն չունի ադմինիստրատորի իրավունքներ։");
+                return;
+            }
+
+            // Firebase Auth-ով իրական մուտքի ստուգում
+            signInWithEmailAndPassword(auth, email, password)
+                .then((userCredential) => {
+                    // Եթե էլ․ հասցեն ու գաղտնաբառը ճիշտ են, տեղափոխվում ենք admin.html
+                    window.location.href = "admin.html";
+                })
+                .catch((error) => {
+                    console.error("Auth Error:", error.code);
+                    // Եթե տվյալները սխալ են կամ սերվերի խնդիր կա
+                    if (error.code === 'auth/invalid-credential' || error.code === 'auth/wrong-password' || error.code === 'auth/user-not-found') {
+                        alert("Սխալ էլ. հասցե կամ գաղտնաբառ։");
+                    } else {
+                        alert("Մուտքի սխալ. " + error.message);
+                    }
+                });
         }
+
+
+
+        
 
         document.getElementById('priceSort').addEventListener('change', () => {
             filterProducts();
