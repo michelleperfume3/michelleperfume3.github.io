@@ -617,22 +617,19 @@ function checkAdminPass() {
 
     
 
-    // Ահա որոնման ֆունկցիան
-  // Օպտիմիզացված որոնման ֆունկցիա ամբողջ բազայից
+// Օպտիմիզացված որոնման ֆունկցիա ամբողջ բազայից՝ քո իրական HTML տեսքով
 async function searchProducts() {
     let input = document.getElementById('searchInput').value.toLowerCase().trim();
-    
-    // 🔥 ՕԳՏԱԳՈՐԾՈՒՄ ԵՆՔ ՔՈ ԻՐԱԿԱՆ ID-Ն (`products-container`)
     const listContainer = document.getElementById('products-container'); 
     
     // Եթե որոնման դաշտը դատարկ է, վերադառնում ենք սովորական էջին
     if (input === "") {
         listContainer.innerHTML = ""; 
-        lastLoadedKey = null;   // Զրոյացնում ենք քո ֆունկցիայի սահմանները
+        lastLoadedKey = null;   
         allLoaded = false;
-        isSearchMode = false;   // Անջատում ենք որոնման ռեժիմը
-        allProducts = [];       // Մաքրում ենք հին մաս-մաս քաշած զանգվածը
-        loadProductsPage();     // Կանչում ենք քո սկզբնական բեռնման ֆունկցիան
+        isSearchMode = false;   
+        allProducts = [];       
+        loadProductsPage();     
         return;
     }
 
@@ -643,7 +640,7 @@ async function searchProducts() {
     if (!allProductsCache) {
         console.log("Բեռնվում են բոլոր ապրանքները Firebase-ից առաջին անգամ...");
         try {
-            const snapshot = await get(productsRef); // Օգտվում է քո արդեն ունեցած productsRef-ից
+            const snapshot = await get(productsRef); 
             allProductsCache = snapshot.val() || {};
         } catch (error) {
             console.error("Search Error:", error);
@@ -658,39 +655,57 @@ async function searchProducts() {
     Object.keys(allProductsCache).forEach(key => {
         const p = allProductsCache[key];
         
-        // Եթե ապրանքը պահեստում չկա (inStock === false), որոնման մեջ էլ ցույց չենք տալիս
+        // Եթե ապրանքը պահեստում չկա (inStock === false), բաց ենք թողնում
         if (p.inStock === false) return;
 
         const title = p.title ? p.title.toLowerCase() : "";
         const brand = p.brand ? p.brand.toLowerCase() : "";
         const description = p.description ? p.description.toLowerCase() : "";
 
-        // Եթե համընկնում կա անվանման, բրենդի կամ նկարագրության մեջ
+        // Ստուգում ենք՝ համընկնում կա՞ անվանման, բրենդի կամ նկարագրության մեջ
         if (title.includes(input) || brand.includes(input) || description.includes(input)) {
             
-            // Ստեղծում ենք նոր HTML քարտ՝ քո `.product-card` կլասով
-            const card = document.createElement('div');
-            card.className = 'product-card'; 
+            // 1. Գների հաշվարկը՝ ճիշտ քո հին կոդի պես
+            let priceHTML = '';
+            if (p.salePrice && Number(p.salePrice) > 0) {
+                priceHTML = `<span class="product-price has-sale">${p.price} AMD</span><span class="product-sale-price">${p.salePrice} AMD</span>`;
+            } else {
+                priceHTML = `<span class="product-price">${p.price} AMD</span>`;
+            }
+
+            // 2. TOP (Pinned) բեյջի ստուգումը
+            const pinnedBadge = p.pinned ? `<span style="position:absolute; background:#ff3b30; color:#fff; font-size:10px; padding:3px 8px; border-radius:20px; margin:5px; font-weight:700; z-index:1;">TOP</span>` : '';
             
-            // Քարտի HTML կառուցվածքը
+            // 3. Քարտի ստեղծումը
+            const card = document.createElement('div');
+            card.className = 'product-card';
+            card.style.position = 'relative';
+            
+            // 4. HTML կառուցվածքի ներբեռնումը Cloudinary նկարով (p.img)
             card.innerHTML = `
-                <img src="${p.imageUrl || p.image || 'placeholder.jpg'}" alt="${p.title}">
+                ${pinnedBadge}
+                <img src="${p.img || 'placeholder.jpg'}" class="product-img" loading="lazy" alt="${p.title}">
                 <div class="product-info">
-                    <span class="brand">${p.brand || ''}</span>
-                    <h3>${p.title}</h3>
-                    <p class="price">${p.price || p.minPrice || 0} ֏</p>
-                    <button onclick="openProductModal('${key}')" class="buy-btn">Ավելացնել զամբյուղ</button>
+                    <div>
+                        <h3 class="product-title">${p.title}</h3>
+                        <div class="product-meta-preview">${p.brand || ''} | ${p.ml || ''} մլ</div>
+                    </div>
+                    <div class="product-price-box">${priceHTML}</div>
+                    <button class="card-view-btn">Մանրամասն</button>
                 </div>
             `;
-            // Նշում: Եթե ապրանքը բացելու ֆունկցիադ onclick-ի վրա այլ անուն ունի (օրինակ՝ showDetails), փոխիր սրա տեղը
+            
+            // 5. Քարտին կպցնում ենք click-ը, որ սեղմելիս մոդալը բացվի՝ փոխանցելով ապրանքի տվյալները (ներառյալ id-ն)
+            const prodObject = { id: key, ...p };
+            card.addEventListener('click', () => openProductModal(prodObject));
             
             listContainer.appendChild(card);
         }
     });
     
-    // Եթե բազայում ոչ մի ապրանք չգտնվեց
+    // Եթե ոչ մի ապրանք չգտնվեց
     if (listContainer.children.length === 0) {
-        listContainer.innerHTML = "<p class='no-results' style='text-align:center; width:100%; grid-column: 1/-1;'>Ապրանք չի գտնվել:</p>";
+        listContainer.innerHTML = '<p style="text-align:center; color:#888; grid-column:1/-1; padding:40px 0;">Ապրանք չի գտնվել</p>';
     }
 }
 
