@@ -198,11 +198,10 @@
     });
 
     
-    const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
-    let currentEditingKey = null;
-    let editInStock = true;
+let currentEditingKey = null;
+let editInStock = true;
 
+    
     // ─── Cloudinary config ────────────────────────────────────────────────────
     const CLOUDINARY_CLOUD_NAME = "dsvesjy03";
     const CLOUDINARY_UPLOAD_PRESET = "michelle_unsigned"; // ← Cloudinary dashboard-ում ստեղծիր unsigned preset այս անունով
