@@ -162,18 +162,42 @@
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
     import { getDatabase, ref, onValue, push, update, remove, query, orderByKey, limitToLast, endBefore, get } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+    
+    // 1. ԱՎԵԼԱՑՐԻՆՔ AUTH ՄՈԴՈՒԼԸ ՊԱՇՏՊԱՆՈՒԹՅԱՆ ՀԱՄԱՐ
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
+    const firebaseConfig = {
+      apiKey: "AIzaSyB0AdCONK1U2RG2z-PkqLTkUKr0QXBF_28",
+      authDomain: "michelle3-989c5.firebaseapp.com",
+      databaseURL: "https://michelle3-989c5-default-rtdb.firebaseio.com",
+      projectId: "michelle3-989c5",
+      storageBucket: "michelle3-989c5.firebasestorage.app",
+      messagingSenderId: "218382653099",
+      appId: "1:218382653099:web:b5f405c4be41bc6d6189ee",
+      measurementId: "G-WDQ3G0701Z"
+    };     
 
-const firebaseConfig = {
-  apiKey: "AIzaSyB0AdCONK1U2RG2z-PkqLTkUKr0QXBF_28",
-  authDomain: "michelle3-989c5.firebaseapp.com",
-  databaseURL: "https://michelle3-989c5-default-rtdb.firebaseio.com",
-  projectId: "michelle3-989c5",
-  storageBucket: "michelle3-989c5.firebasestorage.app",
-  messagingSenderId: "218382653099",
-  appId: "1:218382653099:web:b5f405c4be41bc6d6189ee",
-  measurementId: "G-WDQ3G0701Z"
-};
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    
+    // 2. ԱԿՏԻՎԱՑՐԻՆՔ AUTH-Ը
+    const auth = getAuth(app);
+
+    // 3. ԷՋԻ ԱՎՏՈՄԱՏ ՊԱՇՏՊԱՆՈՒԹՅԱՆ ՍՏՈՒԳՈՒՄԸ
+    onAuthStateChanged(auth, (user) => {
+        const ADMIN_EMAIL = "admin@michelleparfume.am"; // Քո սահմանած ադմինի email-ը
+
+        if (user && user.email === ADMIN_EMAIL) {
+            // Եթե օգտատերը հենց ադմինն է, ամեն ինչ լավ է, մնում է էջում
+            console.log("Բարի գալուստ, Ադմին:", user.email);
+        } else {
+            // Եթե մուտք չի գործել կամ ադմինի հասցեն չէ, հետ է գնում գլխավոր էջ
+            alert("Մուտքն արգելված է։ Խնդրում ենք նախապես անցնել նույնականացում։");
+            window.location.href = "index.html";
+        }
+    });
+
+    
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
     let currentEditingKey = null;
