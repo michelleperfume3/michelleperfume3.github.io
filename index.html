@@ -618,10 +618,12 @@ function checkAdminPass() {
     
 
     // Ահա որոնման ֆունկցիան
-   // Օպտիմիզացված որոնման ֆունկցիա ամբողջ բազայից
+  // Օպտիմիզացված որոնման ֆունկցիա ամբողջ բազայից
 async function searchProducts() {
     let input = document.getElementById('searchInput').value.toLowerCase().trim();
-    const listContainer = document.getElementById('productsList'); // ⚠️ Ստուգիր՝ քո HTML-ում ID-ն սա՞ է
+    
+    // 🔥 ՕԳՏԱԳՈՐԾՈՒՄ ԵՆՔ ՔՈ ԻՐԱԿԱՆ ID-Ն (`products-container`)
+    const listContainer = document.getElementById('products-container'); 
     
     // Եթե որոնման դաշտը դատարկ է, վերադառնում ենք սովորական էջին
     if (input === "") {
@@ -652,7 +654,7 @@ async function searchProducts() {
     // Մաքրում ենք էջի վրայի եղած ապրանքները
     listContainer.innerHTML = "";
 
-    // Որոնում ենք բոլոր 200 ապրանքների միջից
+    // Որոնում ենք բոլոր ապրանքների միջից
     Object.keys(allProductsCache).forEach(key => {
         const p = allProductsCache[key];
         
@@ -666,20 +668,21 @@ async function searchProducts() {
         // Եթե համընկնում կա անվանման, բրենդի կամ նկարագրության մեջ
         if (title.includes(input) || brand.includes(input) || description.includes(input)) {
             
-            // Ստեղծում ենք նոր HTML քարտ
+            // Ստեղծում ենք նոր HTML քարտ՝ քո `.product-card` կլասով
             const card = document.createElement('div');
             card.className = 'product-card'; 
             
-            // 🔥 ԱՅՍՏԵՂ ՏԵՂԱԴՐԻՐ ՔՈ ԻՐԱԿԱՆ HTML ԿԱՌՈՒՑՎԱԾՔԸ
+            // Քարտի HTML կառուցվածքը
             card.innerHTML = `
                 <img src="${p.imageUrl || p.image || 'placeholder.jpg'}" alt="${p.title}">
                 <div class="product-info">
                     <span class="brand">${p.brand || ''}</span>
                     <h3>${p.title}</h3>
-                    <p class="price">${p.price} ֏</p>
-                    <button onclick="addToCart('${key}')" class="buy-btn">Ավելացնել զամբյուղ</button>
+                    <p class="price">${p.price || p.minPrice || 0} ֏</p>
+                    <button onclick="openProductModal('${key}')" class="buy-btn">Ավելացնել զամբյուղ</button>
                 </div>
             `;
+            // Նշում: Եթե ապրանքը բացելու ֆունկցիադ onclick-ի վրա այլ անուն ունի (օրինակ՝ showDetails), փոխիր սրա տեղը
             
             listContainer.appendChild(card);
         }
@@ -687,15 +690,16 @@ async function searchProducts() {
     
     // Եթե բազայում ոչ մի ապրանք չգտնվեց
     if (listContainer.children.length === 0) {
-        listContainer.innerHTML = "<p class='no-results'>Ապրանք չի գտնվել:</p>";
+        listContainer.innerHTML = "<p class='no-results' style='text-align:center; width:100%; grid-column: 1/-1;'>Ապրանք չի գտնվել:</p>";
     }
 }
 
 // Կապում ենք ֆունկցիան Input-ի հետ
 document.getElementById('searchInput').addEventListener('keyup', searchProducts);
 
-</script>
+    </script>
 
+    
 <footer class="footer-section">
     <div class="container">
         <div class="footer-grid">
