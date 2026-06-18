@@ -11,7 +11,7 @@
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
     <script type="text/javascript">
         (function() {
-            emailjs.init("rZBr8xgK7orV2Zi8C");
+            emailjs.init("bduyoN1uRHwHKLHMH");
         })();
     </script>
     <style>
@@ -479,13 +479,13 @@
 
 
         function sendEmailNotification(name, phone, items, total, date) {
-            emailjs.send("service_05dsggr", "template_utk2s95", {
+            emailjs.send("service_5azgw4y", "template_m2y9hqa", {
                 customer_name: name,
                 customer_phone: phone,
                 order_items: items,
                 total_price: total + " AMD",
                 order_date: date,
-                email: "michelle.perfume2@gmail.com"
+                email: "michelle.perfume3@gmail.com"
             }).then(
                 r => console.log("Email ուղարկվեց!", r.status),
                 e => console.error("Email սխալ", e)
