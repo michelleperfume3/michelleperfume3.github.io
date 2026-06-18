@@ -183,23 +183,38 @@
     // 2. ԱԿՏԻՎԱՑՐԻՆՔ AUTH-Ը
     const auth = getAuth(app);
 
-    // 3. ԷՋԻ ԱՎՏՈՄԱՏ ՊԱՇՏՊԱՆՈՒԹՅԱՆ ՍՏՈՒԳՈՒՄԸ
-    onAuthStateChanged(auth, (user) => {
-        const ADMIN_EMAIL = "michelle.perfume3@gmail.com"; // Քո սահմանած ադմինի email-ը
+  // 3. ԷՋԻ ԱՎՏՈՄԱՏ ՊԱՇՏՊԱՆՈՒԹՅԱՆ ՍՏՈՒԳՈՒՄԸ
+let isAuthChecked = false; // Ստուգում է՝ արդյոք Firebase-ը հասցրել է պատասխանել
 
-        if (user && user.email === ADMIN_EMAIL) {
-            // Եթե օգտատերը հենց ադմինն է, ամեն ինչ լավ է, մնում է էջում
+onAuthStateChanged(auth, (user) => {
+    const ADMIN_EMAIL = "michelle.perfume3@gmail.com"; 
+
+    // Եթե սա առաջին բեռնումն է, սպասում ենք, որ Firebase-ը կողմնորոշվի
+    if (!isAuthChecked) {
+        isAuthChecked = true;
+    }
+
+    if (user) {
+        if (user.email === ADMIN_EMAIL) {
             console.log("Բարի գալուստ, Ադմին:", user.email);
+            // Այստեղ ամեն ինչ լավ է, էջը բացվում է
         } else {
-            // Եթե մուտք չի գործել կամ ադմինի հասցեն չէ, հետ է գնում գլխավոր էջ
-            alert("Մուտքն արգելված է։ Խնդրում ենք նախապես անցնել նույնականացում։");
+            alert("Մուտքն արգելված է։ Դուք ադմինիստրատոր չեք։");
             window.location.href = "index.html";
         }
-    });
-
+    } else {
+        // Թույլ ենք տալիս փոքրիկ դադար, որպեսզի համոզվենք, որ օգտատերը իրոք լոգին չի եղել
+        setTimeout(() => {
+            if (!auth.currentUser) {
+                alert("Մուտքն արգելված է։ Խնդրում ենք նախապես անցնել նույնականացում։");
+                window.location.href = "index.html";
+            }
+        }, 1000); // 1 վայրկյան սպասում
+    }
+});
     
-let currentEditingKey = null;
-let editInStock = true;
+// let currentEditingKey = null;
+// let editInStock = true;
 
     
     // ─── Cloudinary config ────────────────────────────────────────────────────
