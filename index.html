@@ -330,10 +330,17 @@
         const PRODUCTS_LIMIT = 20;
         const productsRef = ref(db, 'products');
 
-        async function loadProductsPage() {
-            if (isLoadingProducts || allLoaded) return;
-            isLoadingProducts = true;
+        let allProductsCache = null; 
+        let isSearchMode = false;
 
+
+
+        
+       async function loadProductsPage() {
+    if (isSearchMode) return; 
+
+    if (isLoadingProducts || allLoaded) return;
+    isLoadingProducts = true;
             let dbQuery;
             if (!lastLoadedKey) {
                 dbQuery = query(productsRef, limitToFirst(PRODUCTS_LIMIT));
@@ -611,20 +618,83 @@ function checkAdminPass() {
     
 
     // Ահա որոնման ֆունկցիան
-    function searchProducts() {
-        let input = document.getElementById('searchInput').value.toLowerCase();
-        let productList = document.querySelectorAll('.product-card'); 
-
-        productList.forEach(card => {
-            let title = card.querySelector('h3').innerText.toLowerCase(); 
-            card.style.display = title.includes(input) ? "" : "none";
-        });
+   // Օպտիմիզացված որոնման ֆունկցիա ամբողջ բազայից
+async function searchProducts() {
+    let input = document.getElementById('searchInput').value.toLowerCase().trim();
+    const listContainer = document.getElementById('productsList'); // ⚠️ Ստուգիր՝ քո HTML-ում ID-ն սա՞ է
+    
+    // Եթե որոնման դաշտը դատարկ է, վերադառնում ենք սովորական էջին
+    if (input === "") {
+        listContainer.innerHTML = ""; 
+        lastLoadedKey = null;   // Զրոյացնում ենք քո ֆունկցիայի սահմանները
+        allLoaded = false;
+        isSearchMode = false;   // Անջատում ենք որոնման ռեժիմը
+        allProducts = [];       // Մաքրում ենք հին մաս-մաս քաշած զանգվածը
+        loadProductsPage();     // Կանչում ենք քո սկզբնական բեռնման ֆունկցիան
+        return;
     }
 
-    // Այս տողն է ապահովում, որ ֆունկցիան կաշխատի
-    document.getElementById('searchInput').addEventListener('keyup', searchProducts);
-  
-    </script>
+    // Միացնում ենք որոնման ռեժիմը
+    isSearchMode = true; 
+
+    // Եթե առաջին տառն է գրվում, բազան մեկ անգամ քաշում ենք հիշողության մեջ
+    if (!allProductsCache) {
+        console.log("Բեռնվում են բոլոր ապրանքները Firebase-ից առաջին անգամ...");
+        try {
+            const snapshot = await get(productsRef); // Օգտվում է քո արդեն ունեցած productsRef-ից
+            allProductsCache = snapshot.val() || {};
+        } catch (error) {
+            console.error("Search Error:", error);
+            return;
+        }
+    }
+
+    // Մաքրում ենք էջի վրայի եղած ապրանքները
+    listContainer.innerHTML = "";
+
+    // Որոնում ենք բոլոր 200 ապրանքների միջից
+    Object.keys(allProductsCache).forEach(key => {
+        const p = allProductsCache[key];
+        
+        // Եթե ապրանքը պահեստում չկա (inStock === false), որոնման մեջ էլ ցույց չենք տալիս
+        if (p.inStock === false) return;
+
+        const title = p.title ? p.title.toLowerCase() : "";
+        const brand = p.brand ? p.brand.toLowerCase() : "";
+        const description = p.description ? p.description.toLowerCase() : "";
+
+        // Եթե համընկնում կա անվանման, բրենդի կամ նկարագրության մեջ
+        if (title.includes(input) || brand.includes(input) || description.includes(input)) {
+            
+            // Ստեղծում ենք նոր HTML քարտ
+            const card = document.createElement('div');
+            card.className = 'product-card'; 
+            
+            // 🔥 ԱՅՍՏԵՂ ՏԵՂԱԴՐԻՐ ՔՈ ԻՐԱԿԱՆ HTML ԿԱՌՈՒՑՎԱԾՔԸ
+            card.innerHTML = `
+                <img src="${p.imageUrl || p.image || 'placeholder.jpg'}" alt="${p.title}">
+                <div class="product-info">
+                    <span class="brand">${p.brand || ''}</span>
+                    <h3>${p.title}</h3>
+                    <p class="price">${p.price} ֏</p>
+                    <button onclick="addToCart('${key}')" class="buy-btn">Ավելացնել զամբյուղ</button>
+                </div>
+            `;
+            
+            listContainer.appendChild(card);
+        }
+    });
+    
+    // Եթե բազայում ոչ մի ապրանք չգտնվեց
+    if (listContainer.children.length === 0) {
+        listContainer.innerHTML = "<p class='no-results'>Ապրանք չի գտնվել:</p>";
+    }
+}
+
+// Կապում ենք ֆունկցիան Input-ի հետ
+document.getElementById('searchInput').addEventListener('keyup', searchProducts);
+
+</script>
 
 <footer class="footer-section">
     <div class="container">
