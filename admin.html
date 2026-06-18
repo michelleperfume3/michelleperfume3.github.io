@@ -163,16 +163,17 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
     import { getDatabase, ref, onValue, push, update, remove, query, orderByKey, limitToLast, endBefore, get } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
-    const firebaseConfig = {
-        apiKey: "AIzaSyDDIyOC18ezuMB1dnPaap9FohRGU62OsrY",
-        authDomain: "michele-fcaf7.firebaseapp.com",
-        projectId: "michele-fcaf7",
-        storageBucket: "michele-fcaf7.firebasestorage.app",
-        messagingSenderId: "94596268135",
-        appId: "1:94596268135:web:fb84cda9f2e427199814c2",
-        databaseURL: "https://michele-fcaf7-default-rtdb.firebaseio.com"
-    };
 
+const firebaseConfig = {
+  apiKey: "AIzaSyB0AdCONK1U2RG2z-PkqLTkUKr0QXBF_28",
+  authDomain: "michelle3-989c5.firebaseapp.com",
+  databaseURL: "https://michelle3-989c5-default-rtdb.firebaseio.com",
+  projectId: "michelle3-989c5",
+  storageBucket: "michelle3-989c5.firebasestorage.app",
+  messagingSenderId: "218382653099",
+  appId: "1:218382653099:web:b5f405c4be41bc6d6189ee",
+  measurementId: "G-WDQ3G0701Z"
+};
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
     let currentEditingKey = null;
