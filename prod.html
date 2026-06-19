@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="hy">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Michelle Perfume | Ապրանքի մանրամասներ</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <script type="text/javascript">
+        (function() { emailjs.init("bduyoN1uRHwHKLHMH"); })();
+    </script>
+    <style>
+        body { background:#fafafa; }
+        .prod-page-section { padding: 40px 0 70px; }
+        .prod-back-link { display:inline-flex; align-items:center; gap:6px; color:#555; text-decoration:none; font-size:14px; font-weight:600; margin-bottom: 20px; }
+        .prod-back-link:hover { color:#000; }
+
+        .prod-layout { display:grid; grid-template-columns: 1fr; gap: 30px; }
+        @media (min-width: 860px) { .prod-layout { grid-template-columns: 1fr 1fr; gap: 50px; align-items:flex-start; } }
+
+        .prod-img-wrap { position: relative; }
+        .prod-main-img { width:100%; height: 380px; object-fit: cover; border-radius: 18px; background:#E2DEF7; box-shadow: 0 10px 30px rgba(0,0,0,0.07); }
+        @media (min-width: 860px) { .prod-main-img { height: 560px; } }
+        .prod-pinned-badge { position:absolute; top:16px; left:16px; background:#ff3b30; color:#fff; font-size:12px; padding:5px 12px; border-radius:20px; font-weight:700; }
+
+        .prod-brand { font-size:13px; text-transform:uppercase; letter-spacing:1.5px; color:#888; font-weight:600; margin-bottom: 6px; }
+        .prod-title { font-size: 30px; font-weight:700; margin-bottom: 10px; line-height:1.2; }
+        .prod-tags { display:flex; gap:8px; margin-bottom: 18px; flex-wrap:wrap; }
+        .prod-tag { background:#f0f0f0; color:#333; font-size:12px; font-weight:600; padding:6px 14px; border-radius:20px; }
+        .prod-tag.out { background:#fdecea; color:#ff3b30; }
+
+        .prod-details-box { background:#f8f9fa; padding:18px; border-radius:12px; margin-bottom:20px; font-size:14px; border:1px solid #eaeaec; }
+        .prod-details-box p { margin-bottom:6px; color:#555; }
+        .prod-details-box span { font-weight:600; color:#000; }
+
+        .prod-bio-box { margin-bottom: 22px; }
+        .prod-bio-title { font-size:16px; font-weight:700; margin-bottom:8px; display:flex; align-items:center; gap:8px; }
+        .prod-bio-title::before { content:"✦"; color:#ff3b30; }
+        .prod-bio-text { font-size:14.5px; line-height:1.75; color:#444; white-space: pre-line; }
+        .prod-bio-empty { font-size:14px; color:#aaa; font-style: italic; }
+
+        .dynamic-price-box { background:#eef2f5; padding:14px; border-radius:10px; text-align:center; margin-bottom: 8px; }
+        .dynamic-price-box .price-label { font-size:13px; color:#666; text-transform:uppercase; letter-spacing:1px; }
+        .modal-prices-display { display:flex; justify-content:center; align-items:center; gap:10px; margin-top:5px; }
+        .price-value { font-size:26px; font-weight:700; color:#000; }
+        .price-value.old-struck { text-decoration:line-through; color:#888; font-size:18px; font-weight:500; }
+        .price-value.new-sale { color:#ff3b30; }
+        .credit-hint { font-size:12px; color:#777; text-align:center; margin-bottom:18px; font-weight:500; display:block; }
+
+        .modal-input { width:100%; padding:12px; border:1px solid #EAEAEC; border-radius:8px; margin-bottom:14px; font-family:inherit; outline:none; box-sizing: border-box; }
+        .modal-input:focus { border-color:#000; }
+        select.modal-input { cursor:pointer; font-weight:600; }
+
+        .modal-action-btns { display:flex; gap:10px; margin-top:6px; }
+        .btn-secondary { background:#222; color:#fff; border:none; padding:14px; border-radius:8px; font-weight:600; font-size:14px; width:100%; cursor:pointer; transition:0.2s; }
+        .btn-secondary:hover { background:#444; }
+
+        .prod-loading, .prod-notfound { text-align:center; padding: 100px 20px; color:#888; font-size:16px; }
+    </style>
+</head>
+<body>
+
+    <header class="main-header">
+        <div class="container header-flex">
+            <button class="burger-menu" id="burgerToggle" aria-label="Menu"><span></span><span></span></button>
+            <div class="logo"><a href="index.html">Michelle</a></div>
+            <nav class="nav-menu desktop-only">
+                <ul><li><a href="index.html">Գլխավոր</a></li><li><a href="com.html">Մեր մասին</a></li></ul>
+            </nav>
+            <div class="header-actions"><a href="index.html#catalog" class="cart-btn"><span class="cart-text">Զամբյուղ</span> (<span id="cartCount">0</span>)</a></div>
+        </div>
+    </header>
+
+    <div class="mobile-nav-overlay" id="mobileMenu">
+        <ul class="mobile-menu-links"><li><a href="index.html">Գլխավոր</a></li>
+        <li><a href="com.html" class="about-btn-link">Մեր մասին</a></li>
+        </ul>
+    </div>
+
+    <section class="prod-page-section">
+        <div class="container">
+            <a href="index.html#catalog" class="prod-back-link">← Վերադառնալ կատալոգ</a>
+
+            <div id="prodLoadingState" class="prod-loading">Բեռնվում է...</div>
+            <div id="prodNotFoundState" class="prod-notfound" style="display:none;">Ապրանքը չի գտնվել կամ ջնջվել է։</div>
+
+            <div class="prod-layout" id="prodLayout" style="display:none;">
+                <div class="prod-img-wrap">
+                    <span class="prod-pinned-badge" id="prodPinnedBadge" style="display:none;">TOP</span>
+                    <img id="prodMainImg" src="" alt="" class="prod-main-img">
+                </div>
+
+                <div class="prod-info-col">
+                    <div class="prod-brand" id="prodBrandText">---</div>
+                    <h1 class="prod-title" id="prodTitleText"></h1>
+                    <div class="prod-tags">
+                        <span class="prod-tag" id="prodGenderTag">Unisex</span>
+                        <span class="prod-tag" id="prodMlTag"></span>
+                        <span class="prod-tag out" id="prodStockTag" style="display:none;">Առկա չէ</span>
+                    </div>
+
+                    <div class="prod-details-box">
+                        <p>Ապրանքանիշ (Բրենդ)՝ <span id="detBrand">---</span></p>
+                        <p>Նախատեսված է՝ <span id="detGender">---</span></p>
+                        <p style="margin-top: 12px; font-weight: 600; color: #000;">Ընտրեք ծավալը (մլ)՝</p>
+                        <select id="detMlSelect" class="modal-input" style="margin-bottom: 0;"></select>
+                    </div>
+
+                    <div class="prod-bio-box">
+                        <div class="prod-bio-title">ԲԻՕ</div>
+                        <p class="prod-bio-text" id="prodBioText"></p>
+                    </div>
+
+                    <div class="dynamic-price-box">
+                        <div class="price-label">Ընդհանուր Արժեքը</div>
+                        <div class="modal-prices-display">
+                            <span class="price-value" id="detPriceOld"></span>
+                            <span class="price-value" id="detPrice">0</span>
+                            <span style="font-weight: 600; color: #000;">AMD</span>
+                        </div>
+                    </div>
+                    <span class="credit-hint">* Գործում է ապառիկի ձևակերպում</span>
+
+                    <input type="text" id="customerName" class="modal-input" placeholder="Ձեր Անունը...">
+                    <input type="tel" id="customerPhone" class="modal-input" placeholder="Ձեր Հեռախոսահամարը...">
+
+                    <div class="modal-action-btns">
+                        <button id="addToCartBtn" class="btn-secondary">Ավելացնել զամբյուղ</button>
+                        <button id="submitOrderBtn" class="btn-primary" style="width: 100%; border: none; cursor: pointer;">Գնել հիմա</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+<footer class="footer-section">
+    <div class="container">
+        <div class="footer-grid">
+            <div class="footer-box">
+                <h3>Մեր մասին</h3>
+                <p>Michelle Perfume-ը առաջարկում է բարձրակարգ պարֆյումերիա՝ նրբագեղ հոսունությամբ և մինիմալիստական էսթետիկայով։ Յուրաքանչյուր բույր ընտրված է ձեր անհատականությունը ընդգծելու համար։</p>
+            </div>
+            <div class="footer-box">
+                <h3>Կապ մեզ հետ</h3>
+                <p>📞 Հեռ.: +374 96 07 60 70</p>
+                <p>📍 Հասցե: ք. Երևան, Մազմանյան 1(garajmastersmall),  Ամիրյան 12</p>
+                <p>📧 Gmail: michelle.perfume3@gmail.com</p>
+            </div>
+        </div>
+        <div class="footer-bottom">&copy; 2026 Michelle Perfume. Բոլոր իրավունքները պաշտպանված են։</div>
+    </div>
+</footer>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getDatabase, ref, get, push } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyB0AdCONK1U2RG2z-PkqLTkUKr0QXBF_28",
+        authDomain: "michelle3-989c5.firebaseapp.com",
+        databaseURL: "https://michelle3-989c5-default-rtdb.firebaseio.com",
+        projectId: "michelle3-989c5",
+        storageBucket: "michelle3-989c5.firebasestorage.app",
+        messagingSenderId: "218382653099",
+        appId: "1:218382653099:web:b5f405c4be41bc6d6189ee",
+        measurementId: "G-WDQ3G0701Z"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    document.getElementById('burgerToggle').addEventListener('click', function() {
+        this.classList.toggle('open');
+        document.getElementById('mobileMenu').classList.toggle('open');
+    });
+
+    // ─── Կիսված զամբյուղ (localStorage) ─────────────────────────────────────
+    const CART_KEY = 'michelle_cart';
+    function getCart() {
+        try { return JSON.parse(localStorage.getItem(CART_KEY)) || []; }
+        catch (e) { return []; }
+    }
+    function saveCart(c) { localStorage.setItem(CART_KEY, JSON.stringify(c)); }
+    document.getElementById('cartCount').innerText = getCart().length;
+
+    let selectedProduct = null;
+    let currentPricePerMl = 0;
+    let currentSalePricePerMl = 0;
+
+    function updatePriceDisplay(ml) {
+        const oldPriceContainer = document.getElementById('detPriceOld');
+        const currentPriceContainer = document.getElementById('detPrice');
+        if (currentSalePricePerMl > 0) {
+            const calculatedOldPrice = Math.round(ml * currentPricePerMl);
+            const calculatedNewPrice = Math.round(ml * currentSalePricePerMl);
+            oldPriceContainer.innerText = calculatedOldPrice + " AMD";
+            oldPriceContainer.className = "price-value old-struck";
+            oldPriceContainer.style.display = "inline";
+            currentPriceContainer.innerText = calculatedNewPrice;
+            currentPriceContainer.className = "price-value new-sale";
+        } else {
+            const calculatedPrice = Math.round(ml * currentPricePerMl);
+            oldPriceContainer.style.display = "none";
+            currentPriceContainer.innerText = calculatedPrice;
+            currentPriceContainer.className = "price-value";
+        }
+    }
+
+    function renderProduct(prod) {
+        selectedProduct = prod;
+        document.getElementById('prodMainImg').src = prod.img;
+        document.getElementById('prodMainImg').alt = prod.title;
+        document.getElementById('prodTitleText').innerText = prod.title;
+        document.getElementById('prodBrandText').innerText = prod.brand || '---';
+        document.getElementById('detBrand').innerText = prod.brand || '---';
+        document.getElementById('detGender').innerText = prod.gender || 'Unisex';
+        document.getElementById('prodGenderTag').innerText = prod.gender || 'Unisex';
+        document.getElementById('prodMlTag').innerText = (prod.ml || '') + ' մլ';
+
+        document.getElementById('prodPinnedBadge').style.display = prod.pinned ? 'inline-block' : 'none';
+
+        const stockTag = document.getElementById('prodStockTag');
+        const inStock = prod.inStock !== false;
+        stockTag.style.display = inStock ? 'none' : 'inline-block';
+        document.getElementById('addToCartBtn').disabled = !inStock;
+        document.getElementById('submitOrderBtn').disabled = !inStock;
+        if (!inStock) {
+            document.getElementById('addToCartBtn').style.opacity = '0.5';
+            document.getElementById('submitOrderBtn').style.opacity = '0.5';
+        }
+
+        const bioText = document.getElementById('prodBioText');
+        if (prod.bio && prod.bio.trim() !== '') {
+            bioText.innerText = prod.bio;
+            bioText.classList.remove('prod-bio-empty');
+        } else {
+            bioText.innerText = 'Այս ապրանքի համար ԲԻՕ դեռ ավելացված չէ։';
+            bioText.classList.add('prod-bio-empty');
+        }
+
+        const baseMl = Number(prod.ml);
+        const basePrice = Number(prod.price);
+        currentPricePerMl = basePrice / baseMl;
+        currentSalePricePerMl = (prod.salePrice && Number(prod.salePrice) > 0) ? Number(prod.salePrice) / baseMl : 0;
+
+        const mlSelect = document.getElementById('detMlSelect');
+        mlSelect.innerHTML = '';
+        let optionsArray = prod.sizes && Array.isArray(prod.sizes) ? prod.sizes : [baseMl];
+        optionsArray.sort((a, b) => a - b);
+        optionsArray.forEach(ml => {
+            const option = document.createElement('option');
+            option.value = ml;
+            option.text = `${ml} մլ`;
+            mlSelect.appendChild(option);
+        });
+        mlSelect.value = optionsArray[0];
+        updatePriceDisplay(optionsArray[0]);
+
+        document.getElementById('prodLoadingState').style.display = 'none';
+        document.getElementById('prodLayout').style.display = 'grid';
+        document.title = `${prod.title} | Michelle Perfume`;
+    }
+
+    document.getElementById('detMlSelect').addEventListener('change', function() {
+        updatePriceDisplay(Number(this.value));
+    });
+
+    document.getElementById('addToCartBtn').addEventListener('click', () => {
+        if (selectedProduct) {
+            const finalMl = document.getElementById('detMlSelect').value;
+            const finalPrice = Number(document.getElementById('detPrice').innerText);
+            const cart = getCart();
+            cart.push({ title: selectedProduct.title, brand: selectedProduct.brand || '', gender: selectedProduct.gender || 'Unisex', ml: finalMl, price: finalPrice });
+            saveCart(cart);
+            document.getElementById('cartCount').innerText = cart.length;
+            alert('Ապրանքն ավելացվեց զամբյուղի մեջ։');
+        }
+    });
+
+    function sendEmailNotification(name, phone, items, total, date) {
+        emailjs.send("service_5azgw4y", "template_28bpvm4", {
+            customer_name: name,
+            customer_phone: phone,
+            order_items: items,
+            total_price: total + " AMD",
+            order_date: date,
+            email: "michelle.perfume3@gmail.com"
+        }).then(
+            r => console.log("Email ուղարկվեց!", r.status),
+            e => console.error("Email սխալ", e)
+        );
+    }
+
+    document.getElementById('submitOrderBtn').addEventListener('click', () => {
+        const name = document.getElementById('customerName').value.trim();
+        const phone = document.getElementById('customerPhone').value.trim();
+        if (name && phone && selectedProduct) {
+            const finalMl = document.getElementById('detMlSelect').value;
+            const finalPrice = document.getElementById('detPrice').innerText;
+            const currentDate = new Date().toLocaleDateString('hy-AM');
+            const orderItemInfo = `${selectedProduct.brand || ''} ${selectedProduct.title} (${finalMl} մլ) [${selectedProduct.gender || 'Unisex'}]`;
+            push(ref(db, 'orders'), { name, phone, items: orderItemInfo, total: Number(finalPrice), date: currentDate }).then(() => {
+                sendEmailNotification(name, phone, orderItemInfo, finalPrice, currentDate);
+                alert('Ձեր պատվերն ընդունված է։ Շնորհակալություն գնումների համար: Մեր աշխատակիցը շուտով կկապնվի ձեզ հետ');
+                document.getElementById('customerName').value = '';
+                document.getElementById('customerPhone').value = '';
+            });
+        } else {
+            alert('Խնդրում ենք լրացնել անունը և հեռախոսահամարը։');
+        }
+    });
+
+    // ─── Բեռնում ենք ապրանքը ըստ URL-ի id պարամետրի ──────────────────────────
+    async function loadProductFromUrl() {
+        const params = new URLSearchParams(window.location.search);
+        const id = params.get('id');
+        if (!id) {
+            document.getElementById('prodLoadingState').style.display = 'none';
+            document.getElementById('prodNotFoundState').style.display = 'block';
+            return;
+        }
+        try {
+            const snapshot = await get(ref(db, `products/${id}`));
+            if (snapshot.exists()) {
+                renderProduct({ id, ...snapshot.val() });
+            } else {
+                document.getElementById('prodLoadingState').style.display = 'none';
+                document.getElementById('prodNotFoundState').style.display = 'block';
+            }
+        } catch (error) {
+            console.error('Error loading product:', error);
+            document.getElementById('prodLoadingState').style.display = 'none';
+            document.getElementById('prodNotFoundState').style.display = 'block';
+        }
+    }
+
+    loadProductFromUrl();
+</script>
+</body>
+</html>
