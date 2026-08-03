@@ -1,0 +1,442 @@
+/* prod.css — Ապրանքի մանրամասների էջի ոճեր
+   Հիմնված է style.css-ի բրենդային փոփոխականների վրա (:root-ը սահմանված է style.css-ում) */
+
+body {
+    background: var(--color-gray-light);
+}
+
+.prod-page-section {
+    padding: 40px 0 70px;
+}
+
+.prod-back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: #555;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+.prod-back-link:hover {
+    color: var(--color-black);
+}
+
+.prod-layout {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 30px;
+}
+
+@media (min-width: 860px) {
+    .prod-layout {
+        grid-template-columns: 1fr 1fr;
+        gap: 50px;
+        align-items: flex-start;
+    }
+}
+
+/* ── Նկարների գալերի (Swiper) ───────────────────────────────────────── */
+.prod-img-wrap {
+    position: relative;
+}
+
+.prod-img-swiper {
+    width: 100%;
+    max-width: 100%;
+    height: 380px;
+    border-radius: 18px;
+    background: var(--color-lavender);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.07);
+    overflow: hidden;
+    position: relative;
+}
+
+@media (min-width: 860px) {
+    .prod-img-swiper {
+        height: 560px;
+    }
+}
+
+.prod-img-swiper .swiper-wrapper {
+    width: 100%;
+    height: 100%;
+}
+
+/* Ապահովագրություն. slide-ի width-ը միշտ 100% է մնում, նույնիսկ եթե
+   Swiper-ի սեփական CSS-ը մեկ ակնթարթ ուշանա բեռնվել */
+.prod-img-swiper .swiper-slide {
+    width: 100% !important;
+    height: 100%;
+    flex-shrink: 0;
+}
+
+.prod-img-swiper .swiper-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+    background-color: var(--color-lavender);
+}
+
+.prod-img-swiper .swiper-pagination-bullet {
+    background: #fff !important;
+    opacity: 0.7;
+}
+
+.prod-img-swiper .swiper-pagination-bullet-active {
+    opacity: 1;
+    background: #fff !important;
+}
+
+.prod-img-swiper .swiper-button-prev,
+.prod-img-swiper .swiper-button-next {
+    color: #fff;
+    background: rgba(0, 0, 0, 0.25);
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+}
+
+.prod-img-swiper .swiper-button-prev::after,
+.prod-img-swiper .swiper-button-next::after {
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.prod-pinned-badge {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    background: #ff3b30;
+    color: #fff;
+    font-size: 12px;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-weight: 700;
+    z-index: 5;
+}
+
+/* ── Ապրանքի տեղեկատվության սյուն ───────────────────────────────────── */
+.prod-brand {
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: #888;
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+
+.prod-title {
+    font-size: 30px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    line-height: 1.2;
+    letter-spacing: -0.5px;
+}
+
+.prod-tags {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 18px;
+    flex-wrap: wrap;
+}
+
+.prod-tag {
+    background: #f0f0f0;
+    color: #333;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 6px 14px;
+    border-radius: 20px;
+}
+
+.prod-tag.out {
+    background: #fdecea;
+    color: #ff3b30;
+}
+
+.prod-details-box {
+    background: var(--color-white);
+    padding: 18px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    font-size: 14px;
+    border: 1px solid #eaeaec;
+}
+
+.prod-details-box p {
+    margin-bottom: 6px;
+    color: #555;
+}
+
+.prod-details-box span {
+    font-weight: 600;
+    color: var(--color-black);
+}
+
+.prod-bio-box {
+    margin-bottom: 22px;
+}
+
+.prod-bio-title {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.prod-bio-title::before {
+    content: "✦";
+    color: #ff3b30;
+}
+
+.prod-bio-text {
+    font-size: 14.5px;
+    line-height: 1.75;
+    color: #444;
+    white-space: pre-line;
+}
+
+.prod-bio-empty {
+    font-size: 14px;
+    color: #aaa;
+    font-style: italic;
+}
+
+/* ── Գին ──────────────────────────────────────────────────────────────── */
+.dynamic-price-box {
+    background: var(--color-gray-light);
+    padding: 14px;
+    border-radius: 10px;
+    text-align: center;
+    margin-bottom: 8px;
+}
+
+.dynamic-price-box .price-label {
+    font-size: 13px;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.modal-prices-display {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-top: 5px;
+}
+
+.price-value {
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--color-black);
+}
+
+.price-value.old-struck {
+    text-decoration: line-through;
+    color: #888;
+    font-size: 18px;
+    font-weight: 500;
+}
+
+.price-value.new-sale {
+    color: #ff3b30;
+}
+
+.credit-hint {
+    font-size: 12px;
+    color: #777;
+    text-align: center;
+    margin-bottom: 6px;
+    font-weight: 500;
+    display: block;
+}
+
+.credit-logo {
+    display: block;
+    margin: 4px auto 18px;
+    max-width: 50px;
+    height: auto;
+}
+
+/* ── Ֆորմ / Input-ներ ────────────────────────────────────────────────── */
+.modal-input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #EAEAEC;
+    border-radius: 8px;
+    margin-bottom: 14px;
+    font-family: inherit;
+    outline: none;
+    box-sizing: border-box;
+}
+
+.modal-input:focus {
+    border-color: var(--color-black);
+}
+
+select.modal-input {
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.modal-action-btns {
+    display: flex;
+    gap: 10px;
+    margin-top: 6px;
+}
+
+.btn-secondary {
+    background: #222;
+    color: #fff;
+    border: none;
+    padding: 14px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    width: 100%;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.btn-secondary:hover {
+    background: #444;
+}
+
+.prod-loading,
+.prod-notfound {
+    text-align: center;
+    padding: 100px 20px;
+    color: #888;
+    font-size: 16px;
+}
+
+/* ── Մոդալ (Զամբյուղ) ────────────────────────────────────────────────── */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+    padding: 10px;
+}
+
+.modal.active {
+    display: flex;
+}
+
+.modal-content {
+    background: #fff;
+    padding: 25px;
+    border-radius: 16px;
+    width: 95%;
+    max-width: 440px;
+    position: relative;
+    max-height: 90vh;
+    overflow-y: auto;
+    scrollbar-width: none;
+}
+
+.modal-content::-webkit-scrollbar {
+    display: none;
+}
+
+.modal-title {
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    margin-top: 5px;
+}
+
+.modal-close {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    font-size: 20px;
+    cursor: pointer;
+    background: #fff;
+    border: none;
+    z-index: 10;
+    width: 30px;
+    height: 30px;
+    border-radius: 50px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cart-items-list {
+    margin-bottom: 20px;
+}
+
+.cart-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+    font-size: 14px;
+}
+
+.cart-item-info {
+    flex-grow: 1;
+    padding-right: 10px;
+}
+
+.cart-item-title {
+    font-weight: 600;
+    color: var(--color-black);
+}
+
+.cart-item-meta {
+    font-size: 12px;
+    color: #666;
+}
+
+.cart-item-price {
+    font-weight: 700;
+    color: var(--color-black);
+    white-space: nowrap;
+}
+
+.btn-remove-cart {
+    background: none;
+    border: none;
+    color: #ff3b30;
+    cursor: pointer;
+    font-size: 16px;
+    margin-left: 10px;
+    font-weight: bold;
+}
+
+.cart-empty-text {
+    text-align: center;
+    color: #888;
+    padding: 20px 0;
+    font-size: 15px;
+}
+
+/* ── Header override (այս էջում header-ը լավանդր ֆոնով է, ինչպես index.html-ում) ── */
+.main-header {
+    background-color: var(--color-lavender);
+}
+
+.logo img {
+    display: block;
+    height: auto;
+    max-height: 45px;
+    width: auto;
+}
