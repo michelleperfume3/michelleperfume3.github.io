@@ -26,7 +26,7 @@
         .products-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
         @media (max-width: 420px) { .products-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; } }
         @media (min-width: 768px) { .products-grid { grid-template-columns: repeat(4, 1fr); gap: 30px; } }
-        
+
         .product-card { background: #fff; border-radius: 12px; padding: 10px; transition: transform 0.3s; display: flex; flex-direction: column; cursor: pointer; border: 1px solid #f0f0f0; }
         .product-card:hover { transform: translateY(-5px); box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
         .product-img { width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 8px; background-color: #E2DEF7; }
@@ -34,7 +34,7 @@
         .product-info { margin-top: 12px; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; }
         .product-title { font-size: 16px; font-weight: 600; margin-bottom: 5px; }
         .product-meta-preview { font-size: 12px; color: #888; margin-bottom: 5px; }
-        
+
         .product-price-box { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-size: 15px; }
         .product-price { font-weight: 700; color: #1a1a1a; }
         .product-price.has-sale { text-decoration: line-through; color: #888; font-size: 13px; font-weight: 400; }
@@ -50,17 +50,17 @@
         .modal.active { display: flex; }
         .modal-content { background: #fff; padding: 25px; border-radius: 16px; width: 95%; max-width: 440px; position: relative; max-height: 90vh; overflow-y: auto; scrollbar-width: none; }
         .modal-content::-webkit-scrollbar { display: none; }
-        
+
         .modal-title { font-size: 22px; font-weight: 700; margin-bottom: 12px; margin-top: 5px; }
         .modal-close { position: absolute; top: 15px; right: 15px; font-size: 20px; cursor: pointer; background: #fff; border: none; z-index: 10; width: 30px; height: 30px; border-radius: 50px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); display: flex; align-items: center; justify-content: center; }
-        
+
         .modal-product-details { background: #f8f9fa; padding: 15px; border-radius: 10px; margin-bottom: 20px; font-size: 14px; border: 1px solid #eaeaec; }
         .modal-product-details p { margin-bottom: 4px; color: #555; }
         .modal-product-details span { font-weight: 600; color: #000; }
 
         .dynamic-price-box { background: #eef2f5; padding: 12px; border-radius: 8px; text-align: center; margin-bottom: 5px; margin-top: 15px;}
         .dynamic-price-box .price-label { font-size: 13px; color: #666; text-transform: uppercase; letter-spacing: 1px;}
-        
+
         .modal-prices-display { display: flex; justify-content: center; align-items: center; gap: 10px; margin-top: 5px; }
         .price-value { font-size: 24px; font-weight: 700; color: #000; }
         .price-value.old-struck { text-decoration: line-through; color: #888; font-size: 18px; font-weight: 500; }
@@ -86,30 +86,22 @@
         .btn-remove-cart { background: none; border: none; color: #ff3b30; cursor: pointer; font-size: 16px; margin-left: 10px; font-weight: bold; }
         .cart-empty-text { text-align: center; color: #888; padding: 20px 0; font-size: 15px; }
 
-      .heroSwiper { 
-    width: 100%; 
-    max-width: 500px; 
-    aspect-ratio: 1 / 1; /* Ապահովում է 1:1 քառակուսի ձևը */
-    margin: 0 auto; 
-    border-radius: 12px;
-    overflow: hidden;
-}
+        .heroSwiper {
+            width: 100%;
+            max-width: 500px;
+            aspect-ratio: 1 / 1;
+            margin: 0 auto;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        .heroSwiper .swiper-wrapper,
+        .heroSwiper .swiper-slide { width: 100%; height: 100%; }
+        .heroSwiper .swiper-slide img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
-.heroSwiper .swiper-wrapper,
-.heroSwiper .swiper-slide {
-    width: 100%;
-    height: 100%;
-}
-
-.heroSwiper .swiper-slide img { 
-    width: 100%; 
-    height: 100%; 
-    object-fit: cover; /* Լցնում է ամբողջ տարածքը */
-    display: block;
-}
-        
         .main-header { background-color: #E2DEF7; }
         .logo img { display: block; height: auto; max-height: 45px; width: auto; }
+
+        .load-status { text-align: center; color: #888; font-size: 13px; padding: 20px 0; min-height: 1px; }
     </style>
 </head>
 <body>
@@ -148,7 +140,7 @@
     <section class="products-section" id="catalog">
         <div class="container">
             <h2 class="section-title">Մեր Տեսականին</h2>
-            
+
 <input type="text" id="searchInput" placeholder="Որոնել ապրանքներ...">
             <div class="filters filters-responsive" style="text-align: center; margin-bottom: 30px;">
                 <button class="filter-btn active" data-filter="all">Բոլորը</button>
@@ -169,10 +161,11 @@
                 </select>
             </div>
             <div class="products-grid" id="products-container"></div>
+            <div id="products-sentinel" class="load-status"></div>
         </div>
     </section>
 
-    
+
     <div class="modal" id="cartModal">
         <div class="modal-content">
             <button class="modal-close" id="closeCartModalBtn">✕</button>
@@ -197,21 +190,20 @@
             <button class="modal-close" id="closeAdminModalBtn">✕</button>
             <h3 class="modal-title">Մուտք Ադմին Համակարգ</h3>
             <p style="margin-bottom: 15px; font-size: 14px; color: #666;">Մուտք գործելու համար ներմուծեք ձեր տվյալները։</p>
-            
+
             <input type="email" id="adminEmailInput" class="modal-input" placeholder="Էլ. հասցե (Email)..." style="width: 100%; margin-bottom: 10px; padding: 12px; border: 1px solid #EAEAEC; border-radius: 8px; box-sizing: border-box;">
-            
+
             <input type="password" id="adminPassInput" class="modal-input" placeholder="Գաղտնաբառ..." style="width: 100%; margin-bottom: 15px; padding: 12px; border: 1px solid #EAEAEC; border-radius: 8px; box-sizing: border-box;">
-            
+
             <button id="adminLoginBtn" class="btn-primary" style="width: 100%; border: none; cursor: pointer; padding: 12px; border-radius: 8px;">Մուտք Գործել</button>
         </div>
     </div>
 
-    
+
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
         import { getDatabase, ref, onValue, push, query, orderByKey, limitToFirst, startAfter, get } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
-        // Նոր տող Auth-ի համար
         import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
         const firebaseConfig = {
@@ -227,10 +219,9 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
-        // Նոր տող Auth-ն ակտիվացնելու համար
-        const auth = getAuth(app); 
+        const auth = getAuth(app);
 
-        // ─── Կիսված զամբյուղ (localStorage) — աշխատում է index.html և prod.html միջև ──
+        // ─── Կիսված զամբյուղ (localStorage) ──
         const CART_KEY = 'michelle_cart';
         function getCart() {
             try { return JSON.parse(localStorage.getItem(CART_KEY)) || []; }
@@ -252,7 +243,7 @@
             document.getElementById('mobileMenu').classList.toggle('open');
         });
 
-        // ─── Գլխավոր (Hero) տեքստը՝ ադմինի կողմից խմբագրելի ────────────────────
+        // ─── Hero տեքստ ──
         onValue(ref(db, 'content/hero'), (snapshot) => {
             const data = snapshot.val();
             if (data) {
@@ -276,9 +267,9 @@
                 wrapper.innerHTML += `<div class="swiper-slide"><img src="${url}" alt="Michelle"></div>`;
             });
             if (swiperInstance) swiperInstance.destroy();
-            swiperInstance = new Swiper('.heroSwiper', { 
-                loop: slidesCount >= 3, 
-                autoplay: { delay: 4000 }, 
+            swiperInstance = new Swiper('.heroSwiper', {
+                loop: slidesCount >= 3,
+                autoplay: { delay: 4000 },
                 pagination: { el: '.swiper-pagination', clickable: true },
                 slidesPerView: 1,
                 spaceBetween: 10,
@@ -286,8 +277,6 @@
             });
         });
 
-        // ─── Firebase-ի sparse-array quirk-ից պաշտպանվելու համար՝ images դաշտը միշտ
-        // վերածում ենք իրական JS array-ի, նույնիսկ եթե Firebase-ը այն object-ի է վերածել ──
         function normalizeImages(prod) {
             let imgs = prod.images;
             if (imgs && !Array.isArray(imgs) && typeof imgs === 'object') {
@@ -299,16 +288,12 @@
             return imgs;
         }
 
-        // ─── Cloudinary thumbnail helper — ցույց է տալիս ավելի փոքր size, quality-eco տարբերակ,
-        // որ grid-ի քարտերում իզուր մեծ նկար չբեռնվի (խնայում է bandwidth) ─────────────────
         function cloudinaryThumb(url, width) {
             if (!url || url.indexOf('/upload/') === -1) return url;
             return url.replace(/\/upload\/[^/]+\//, `/upload/f_auto,q_auto:eco,w_${width},c_limit/`);
         }
 
-        // ─── Ծավալ+Գին (sizes array) օգնական ֆունկցիաներ ────────────────────────
         function normalizeSizes(sizes) {
-            // Firebase-ի sparse-array quirk-ից պաշտպանվելու համար (object → array)
             if (sizes && !Array.isArray(sizes) && typeof sizes === 'object') {
                 sizes = Object.values(sizes);
             }
@@ -392,6 +377,7 @@
                 isSearchMode = true;
                 searchProducts();
             }
+            setTimeout(checkLoadMore, 0);
         }
 
         function goToProduct(prod) {
@@ -433,23 +419,37 @@
             });
         }
 
+        // ─── ԲԵՌՆՈՒՄ 20-ԱԿԱՆ (ուղղված) ─────────────────────────────────────────
         let lastLoadedKey = null;
         let isLoadingProducts = false;
         let allLoaded = false;
         const PRODUCTS_LIMIT = 20;
         const productsRef = ref(db, 'products');
 
-        let allProductsCache = null; 
+        let allProductsCache = null;
         let isSearchMode = false;
 
-       async function loadProductsPage() {
-    if (isSearchMode) return; 
+        function setStatus(text) {
+            const el = document.getElementById('products-sentinel');
+            if (el) el.textContent = text;
+        }
 
-    if (isLoadingProducts || allLoaded) return;
-    isLoadingProducts = true;
-            // ─── ՈՒՂՂՈՒՄ. startAfter()-ը Firebase-ում պարտադիր պահանջում է explicit
-            // orderByKey() (կամ orderByChild/orderByValue) կանչ, հակառակ դեպքում throw է
-            // անում runtime error, ինչը լուռ խափանում է pagination-ը 2-րդ էջից սկսած ──
+        // Եթե sentinel-ը մոտ է էկրանին (կամ էջը կարճ է), բեռնում է հաջորդ 20-ը
+        function checkLoadMore() {
+            if (isSearchMode || isLoadingProducts || allLoaded) return;
+            const sentinel = document.getElementById('products-sentinel');
+            if (!sentinel) return;
+            const rect = sentinel.getBoundingClientRect();
+            if (rect.top < window.innerHeight + 800) {
+                loadProductsPage();
+            }
+        }
+
+        async function loadProductsPage() {
+            if (isSearchMode || isLoadingProducts || allLoaded) return;
+            isLoadingProducts = true;
+            setStatus('Բեռնվում է...');
+
             let dbQuery;
             if (!lastLoadedKey) {
                 dbQuery = query(productsRef, orderByKey(), limitToFirst(PRODUCTS_LIMIT));
@@ -459,38 +459,42 @@
 
             try {
                 const snapshot = await get(dbQuery);
-                if (snapshot.exists()) {
-                    const data = snapshot.val();
-                    const keys = Object.keys(data);
-                    if (keys.length < PRODUCTS_LIMIT) allLoaded = true;
-                    lastLoadedKey = keys[keys.length - 1];
-
-                    let newProducts = keys
-                        .map(key => ({ id: key, ...data[key] }))
-                        // ── inStock === false եղածները բաց ենք թողնում ──
-                        .filter(p => p.inStock !== false);
-
-                    allProducts = allProducts.concat(newProducts);
-                    allProducts.sort((a, b) => {
-                        const aPinned = a.pinned === true ? 1 : 0;
-                        const bPinned = b.pinned === true ? 1 : 0;
-                        return bPinned - aPinned;
-                    });
-                    newProducts.forEach(registerBrandAndCollection);
-                    refreshDisplay();
+                if (!snapshot.exists()) {
+                    allLoaded = true;
+                    return;
                 }
+
+                // snapshot.forEach-ը պահպանում է Firebase-ի ճիշտ կարգը
+                const rawItems = [];
+                snapshot.forEach(child => {
+                    rawItems.push({ id: child.key, ...child.val() });
+                });
+
+                if (rawItems.length < PRODUCTS_LIMIT) allLoaded = true;
+                lastLoadedKey = rawItems[rawItems.length - 1].id;
+
+                const newProducts = rawItems.filter(p => p.inStock !== false);
+
+                allProducts = allProducts.concat(newProducts);
+                allProducts.sort((a, b) => {
+                    const aPinned = a.pinned === true ? 1 : 0;
+                    const bPinned = b.pinned === true ? 1 : 0;
+                    return bPinned - aPinned;
+                });
+                newProducts.forEach(registerBrandAndCollection);
+                refreshDisplay();
             } catch (error) {
                 console.error("Error fetching products:", error);
             } finally {
                 isLoadingProducts = false;
+                setStatus(allLoaded ? '' : '');
+                // Եթե էջը դեռ կարճ է, շարունակում ենք բեռնել
+                setTimeout(checkLoadMore, 0);
             }
         }
 
-        window.addEventListener('scroll', () => {
-            if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 600) {
-                loadProductsPage();
-            }
-        });
+        window.addEventListener('scroll', checkLoadMore, { passive: true });
+        window.addEventListener('resize', checkLoadMore);
 
         loadProductsPage();
 
@@ -557,7 +561,6 @@
             });
         }
 
-        // Տողի վրա բեռնման պահին թարմացնում ենք cart-ի թիվը header-ում
         document.getElementById('cartCount').innerText = cart.length;
 
         function sendEmailNotification(name, phone, items, total, date) {
@@ -622,33 +625,28 @@
             if (e.key === 'Enter') checkAdminPass();
         });
 
-function checkAdminPass() {
+        function checkAdminPass() {
             const email = document.getElementById('adminEmailInput').value.trim();
             const password = document.getElementById('adminPassInput').value.trim();
-            
-            // Սա այն էլ․ հասցեն է, որը ստեղծելու ես Firebase Console-ում
-            const ADMIN_EMAIL = "ghazar.asatryan@gmail.com"; 
+
+            const ADMIN_EMAIL = "ghazar.asatryan@gmail.com";
 
             if (!email || !password) {
                 alert("Խնդրում ենք լրացնել բոլոր դաշտերը։");
                 return;
             }
 
-            // Ստուգում ենք՝ արդյոք մուտքագրված էլ․ հասցեն համընկնում է ադմինի հասցեի հետ
             if (email !== ADMIN_EMAIL) {
                 alert("Այս էլ. հասցեն չունի ադմինիստրատորի իրավունքներ։");
                 return;
             }
 
-            // Firebase Auth-ով իրական մուտքի ստուգում
             signInWithEmailAndPassword(auth, email, password)
-                .then((userCredential) => {
-                    // Եթե էլ․ հասցեն ու գաղտնաբառը ճիշտ են, տեղափոխվում ենք admin.html
+                .then(() => {
                     window.location.href = "admin.html";
                 })
                 .catch((error) => {
                     console.error("Auth Error:", error.code);
-                    // Եթե տվյալները սխալ են կամ սերվերի խնդիր կա
                     if (error.code === 'auth/invalid-credential' || error.code === 'auth/wrong-password' || error.code === 'auth/user-not-found') {
                         alert("Սխալ էլ. հասցե կամ գաղտնաբառ։");
                     } else {
@@ -661,56 +659,54 @@ function checkAdminPass() {
             refreshDisplay();
         });
 
-// Օպտիմիզացված որոնման ֆունկցիա ամբողջ բազայից՝ քո իրական HTML տեսքով
-async function searchProducts() {
-    let input = document.getElementById('searchInput').value.toLowerCase().trim();
+        // ─── Որոնում ամբողջ բազայից ───────────────────────────────────────────
+        async function searchProducts() {
+            const input = document.getElementById('searchInput').value.toLowerCase().trim();
 
-    // Եթե որոնման դաշտը դատարկ է, վերադառնում ենք սովորական էջին
-    if (input === "") {
-        lastLoadedKey = null;
-        allLoaded = false;
-        isSearchMode = false;
-        allProducts = [];
-        loadProductsPage();
-        return;
-    }
+            // Դատարկ դաշտ՝ վերադառնում ենք սովորական ցուցակին (allProducts-ը մնացել է անփոփոխ)
+            if (input === "") {
+                if (isSearchMode) {
+                    isSearchMode = false;
+                    refreshDisplay();
+                }
+                return;
+            }
 
-    // Միացնում ենք որոնման ռեժիմը
-    isSearchMode = true;
+            isSearchMode = true;
 
-    // Եթե առաջին տառն է գրվում, բազան մեկ անգամ քաշում ենք հիշողության մեջ
-    if (!allProductsCache) {
-        console.log("Բեռնվում են բոլոր ապրանքները Firebase-ից առաջին անգամ...");
-        try {
-            const snapshot = await get(productsRef);
-            allProductsCache = snapshot.val() || {};
-            Object.keys(allProductsCache).forEach(key => registerBrandAndCollection(allProductsCache[key]));
-        } catch (error) {
-            console.error("Search Error:", error);
-            return;
+            if (!allProductsCache) {
+                try {
+                    const snapshot = await get(productsRef);
+                    allProductsCache = snapshot.val() || {};
+                    Object.keys(allProductsCache).forEach(key => registerBrandAndCollection(allProductsCache[key]));
+                } catch (error) {
+                    console.error("Search Error:", error);
+                    return;
+                }
+            }
+
+            // Եթե սպասելու ընթացքում դաշտը դատարկվել է, չենք ցուցադրում հին արդյունքը
+            const currentInput = document.getElementById('searchInput').value.toLowerCase().trim();
+            if (currentInput === "") return;
+
+            const matched = Object.keys(allProductsCache)
+                .map(key => ({ id: key, ...allProductsCache[key] }))
+                .filter(p => {
+                    if (!matchesActiveFilters(p)) return false;
+                    const title = p.title ? p.title.toLowerCase() : "";
+                    const brand = p.brand ? p.brand.toLowerCase() : "";
+                    const description = p.bio ? p.bio.toLowerCase() : "";
+                    return title.includes(currentInput) || brand.includes(currentInput) || description.includes(currentInput);
+                });
+
+            renderProducts(applySort(matched));
         }
-    }
 
-    // Որոնում ենք բոլոր ապրանքների միջից՝ կիրառելով նաև ակտիվ ֆիլտրերը (գենդեր, բրենդ, հավաքածու, նորույթ)
-    const matched = Object.keys(allProductsCache)
-        .map(key => ({ id: key, ...allProductsCache[key] }))
-        .filter(p => {
-            if (!matchesActiveFilters(p)) return false;
-            const title = p.title ? p.title.toLowerCase() : "";
-            const brand = p.brand ? p.brand.toLowerCase() : "";
-            const description = p.bio ? p.bio.toLowerCase() : "";
-            return title.includes(input) || brand.includes(input) || description.includes(input);
-        });
-
-    renderProducts(applySort(matched));
-}
-
-// Կապում ենք ֆունկցիան Input-ի հետ
-document.getElementById('searchInput').addEventListener('keyup', searchProducts);
+        document.getElementById('searchInput').addEventListener('keyup', searchProducts);
 
     </script>
 
-    
+
 <footer class="footer-section">
     <div class="container">
         <div class="footer-grid">
@@ -725,9 +721,6 @@ document.getElementById('searchInput').addEventListener('keyup', searchProducts)
                 <p>📍 ք. Երևան, Մազմանյան 1(Garaj Masters' Mall) </p>
                  <p>📍  ք. Երևան, Ամիրյան 12 </p>
                 <p>📧 Gmail: michelle.perfume3@gmail.com</p>
-
-
-                
             </div>
         </div>
         <div class="footer-bottom">
