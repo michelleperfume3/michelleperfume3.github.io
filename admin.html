@@ -28,30 +28,25 @@
         .btn-edit-action:hover { background: #0056b3; }
         .item-actions { display: flex; flex-direction: column; gap: 5px; justify-content: center; }
 
-        /* Stock toggle */
         .stock-toggle-group { display: flex; gap: 8px; margin-bottom: 15px; }
         .stock-toggle-btn { flex: 1; padding: 10px; border-radius: 8px; border: 2px solid #EAEAEC; background: #fff; font-family: inherit; font-size: 13px; font-weight: 600; cursor: pointer; transition: 0.2s; }
         .stock-toggle-btn.in-stock.active { background: #e6f4ea; border-color: #28a745; color: #28a745; }
         .stock-toggle-btn.out-of-stock.active { background: #fdecea; border-color: #ff3b30; color: #ff3b30; }
         .stock-toggle-btn:not(.active) { color: #aaa; }
 
-        /* Out of stock badge on card */
         .out-of-stock-badge { background: #ff3b30; color: #fff; padding: 2px 6px; border-radius: 4px; font-size: 10px; margin-left: 5px; }
 
-        /* Pagination / Infinite scroll styles */
         .load-more-sentinel { height: 40px; display: flex; align-items: center; justify-content: center; margin-top: 10px; }
         .load-more-spinner { display: none; font-size: 13px; color: #007bff; font-weight: 600; }
         .load-more-spinner.visible { display: block; }
         .all-loaded-msg { display: none; font-size: 12px; color: #aaa; text-align: center; padding: 10px 0 20px; }
         .all-loaded-msg.visible { display: block; }
 
-        /* Upload progress bar */
         .upload-progress { display: none; font-size: 13px; color: #555; margin-top: 8px; }
         .upload-progress.visible { display: block; }
         .progress-bar-wrap { background: #eee; border-radius: 20px; height: 6px; margin-top: 6px; overflow: hidden; }
         .progress-bar-fill { background: #007bff; height: 100%; width: 0%; border-radius: 20px; transition: width 0.3s; }
 
-        /* Manual sizes+prices builder */
         .size-row { display: flex; gap: 8px; margin-bottom: 8px; align-items: center; flex-wrap: wrap; }
         .size-row input { flex: 1 1 80px; min-width: 70px; padding: 8px 10px; border: 1px solid #EAEAEC; border-radius: 6px; font-family: inherit; font-size: 13px; box-sizing: border-box; }
         .size-row input:focus { border-color: #000; outline: none; }
@@ -60,7 +55,6 @@
         .add-size-row-btn { background: #222; color: #fff; }
         .add-size-row-btn:hover { background: #444; }
 
-        /* Edit modal images gallery */
         .edit-images-list { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 8px; }
         .edit-image-thumb { position: relative; width: 64px; height: 64px; border-radius: 6px; overflow: hidden; border: 1px solid #EAEAEC; }
         .edit-image-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
@@ -235,10 +229,7 @@
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
     import { getDatabase, ref, onValue, push, update, remove, query, orderByKey, limitToLast, endBefore, get } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
-    // Firebase Storage — նկարների պահպանման համար (փոխարինում է Cloudinary-ին)
     import { getStorage, ref as storageRef, uploadBytesResumable, getDownloadURL, deleteObject } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
-    
-    // 1. ԱՎԵԼԱՑՐԻՆՔ AUTH ՄՈԴՈՒԼԸ ՊԱՇՏՊԱՆՈՒԹՅԱՆ ՀԱՄԱՐ
     import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
     const firebaseConfig = {
@@ -250,113 +241,93 @@
       messagingSenderId: "218382653099",
       appId: "1:218382653099:web:b5f405c4be41bc6d6189ee",
       measurementId: "G-WDQ3G0701Z"
-    };     
+    };
 
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
     const storage = getStorage(app);
-    
-    // 2. ԱԿՏԻՎԱՑՐԻՆՔ AUTH-Ը
     const auth = getAuth(app);
 
-  // 3. ԷՋԻ ԱՎՏՈՄԱՏ ՊԱՇՏՊԱՆՈՒԹՅԱՆ ՍՏՈՒԳՈՒՄԸ
-let isAuthChecked = false; // Ստուգում է՝ արդյոք Firebase-ը հասցրել է պատասխանել
-
-onAuthStateChanged(auth, (user) => {
-    const ADMIN_EMAIL = "ghazar.asatryan@gmail.com"; 
-
-    // Եթե սա առաջին բեռնումն է, սպասում ենք, որ Firebase-ը կողմնորոշվի
-    if (!isAuthChecked) {
-        isAuthChecked = true;
-    }
-
-    if (user) {
-        if (user.email === ADMIN_EMAIL) {
-            console.log("Բարի գալուստ, Ադմին:", user.email);
-            // Այստեղ ամեն ինչ լավ է, էջը բացվում է
-        } else {
-            alert("Մուտքն արգելված է։ Դուք ադմինիստրատոր չեք։");
-            window.location.href = "index.html";
-        }
-    } else {
-        // Թույլ ենք տալիս փոքրիկ դադար, որպեսզի համոզվենք, որ օգտատերը իրոք լոգին չի եղել
-        setTimeout(() => {
-            if (!auth.currentUser) {
-                alert("Մուտքն արգելված է։ Խնդրում ենք նախապես անցնել նույնականացում։");
+    // ─── Էջի պաշտպանություն ──
+    onAuthStateChanged(auth, (user) => {
+        const ADMIN_EMAIL = "ghazar.asatryan@gmail.com";
+        if (user) {
+            if (user.email !== ADMIN_EMAIL) {
+                alert("Մուտքն արգելված է։ Դուք ադմինիստրատոր չեք։");
                 window.location.href = "index.html";
             }
-        }, 1000); // 1 վայրկյան սպասում
-    }
-});
-    
-let currentEditingKey = null;
-let editInStock = true;
-let editImagesState = [];
-let newProductImageFiles = [];
-
-function renderNewProductImagesPreview() {
-    const list = document.getElementById('prodImagesPreview');
-    list.innerHTML = '';
-    newProductImageFiles.forEach((file, idx) => {
-        const thumb = document.createElement('div');
-        thumb.className = 'edit-image-thumb';
-        const objectUrl = URL.createObjectURL(file);
-        thumb.innerHTML = `
-            <img src="${objectUrl}" alt="">
-            <button type="button" class="remove-image-btn" title="Հեռացնել">✕</button>
-            ${idx === 0 ? '<span class="cover-label">Գլխավոր</span>' : ''}
-        `;
-        thumb.querySelector('.remove-image-btn').addEventListener('click', () => {
-            newProductImageFiles.splice(idx, 1);
-            renderNewProductImagesPreview();
-        });
-        list.appendChild(thumb);
+        } else {
+            setTimeout(() => {
+                if (!auth.currentUser) {
+                    alert("Մուտքն արգելված է։ Խնդրում ենք նախապես անցնել նույնականացում։");
+                    window.location.href = "index.html";
+                }
+            }, 1000);
+        }
     });
-    if (newProductImageFiles.length === 0) {
-        list.innerHTML = '<p style="font-size:12px; color:#aaa;">Նկար դեռ ընտրված չէ</p>';
-    }
-}
 
-document.getElementById('prodFileInput').addEventListener('change', function() {
-    const newlyPicked = Array.from(this.files || []);
-    newProductImageFiles = newProductImageFiles.concat(newlyPicked);
-    this.value = ''; // թույլ է տալիս կրկին նույն/այլ ֆայլ ընտրել առանց փոխարինելու նախորդները
+    let currentEditingKey = null;
+    let editInStock = true;
+    let editImagesState = [];
+    let newProductImageFiles = [];
+
+    function renderNewProductImagesPreview() {
+        const list = document.getElementById('prodImagesPreview');
+        list.innerHTML = '';
+        newProductImageFiles.forEach((file, idx) => {
+            const thumb = document.createElement('div');
+            thumb.className = 'edit-image-thumb';
+            const objectUrl = URL.createObjectURL(file);
+            thumb.innerHTML = `
+                <img src="${objectUrl}" alt="">
+                <button type="button" class="remove-image-btn" title="Հեռացնել">✕</button>
+                ${idx === 0 ? '<span class="cover-label">Գլխավոր</span>' : ''}
+            `;
+            thumb.querySelector('.remove-image-btn').addEventListener('click', () => {
+                newProductImageFiles.splice(idx, 1);
+                renderNewProductImagesPreview();
+            });
+            list.appendChild(thumb);
+        });
+        if (newProductImageFiles.length === 0) {
+            list.innerHTML = '<p style="font-size:12px; color:#aaa;">Նկար դեռ ընտրված չէ</p>';
+        }
+    }
+
+    document.getElementById('prodFileInput').addEventListener('change', function() {
+        const newlyPicked = Array.from(this.files || []);
+        newProductImageFiles = newProductImageFiles.concat(newlyPicked);
+        this.value = '';
+        renderNewProductImagesPreview();
+    });
     renderNewProductImagesPreview();
-});
-renderNewProductImagesPreview();
 
-function renderEditImagesList() {
-    const list = document.getElementById('editProdImagesList');
-    list.innerHTML = '';
-    editImagesState.forEach((url, idx) => {
-        const thumb = document.createElement('div');
-        thumb.className = 'edit-image-thumb';
-        thumb.innerHTML = `
-            <img src="${thumbUrl(url, 130)}" alt="">
-            <button type="button" class="remove-image-btn" title="Հեռացնել">✕</button>
-            ${idx === 0 ? '<span class="cover-label">Գլխավոր</span>' : ''}
-        `;
-        thumb.querySelector('.remove-image-btn').addEventListener('click', () => {
-            editImagesState.splice(idx, 1);
-            renderEditImagesList();
-        });
-        list.appendChild(thumb);
-    });
-    if (editImagesState.length === 0) {
-        list.innerHTML = '<p style="font-size:12px; color:#aaa;">Նկար չկա</p>';
-    }
-}
-
-    // ─── Thumbnail URL helper — Firebase Storage-ը (ի տարբերություն Cloudinary-ի) URL-ի
-    // միջոցով dynamic resize չի աջակցում, ուստի պարզապես վերադարձնում ենք url-ն ինչպես կա։
-    // Client-side compressImageFile()-ը արդեն նախապես փոքրացնում է վերբեռնվող ֆայլերը,
-    // այնպես որ ցուցակների thumbnail-ները արդեն ողջամիտ չափի են։
     function thumbUrl(url) {
         return url;
     }
 
-    // ─── Firebase-ի sparse-array quirk-ից պաշտպանվելու համար՝ images դաշտը միշտ
-    // վերածում ենք իրական JS array-ի, նույնիսկ եթե Firebase-ը այն object-ի է վերածել ──
+    function renderEditImagesList() {
+        const list = document.getElementById('editProdImagesList');
+        list.innerHTML = '';
+        editImagesState.forEach((url, idx) => {
+            const thumb = document.createElement('div');
+            thumb.className = 'edit-image-thumb';
+            thumb.innerHTML = `
+                <img src="${thumbUrl(url, 130)}" alt="">
+                <button type="button" class="remove-image-btn" title="Հեռացնել">✕</button>
+                ${idx === 0 ? '<span class="cover-label">Գլխավոր</span>' : ''}
+            `;
+            thumb.querySelector('.remove-image-btn').addEventListener('click', () => {
+                editImagesState.splice(idx, 1);
+                renderEditImagesList();
+            });
+            list.appendChild(thumb);
+        });
+        if (editImagesState.length === 0) {
+            list.innerHTML = '<p style="font-size:12px; color:#aaa;">Նկար չկա</p>';
+        }
+    }
+
     function normalizeImages(p) {
         let imgs = p.images;
         if (imgs && !Array.isArray(imgs) && typeof imgs === 'object') {
@@ -368,7 +339,6 @@ function renderEditImagesList() {
         return imgs;
     }
 
-    // ─── Ծավալ+Գին տողերի (sizes builder) օգնական ֆունկցիաներ ──────────────────
     function createSizeRow(container, ml = '', price = '', salePrice = '') {
         const row = document.createElement('div');
         row.className = 'size-row';
@@ -419,7 +389,6 @@ function renderEditImagesList() {
         }).join(' | ');
     }
 
-    // Add-product ձևի mainային ծավալի տող — մեկ դատարկ տողով սկսում ենք
     createSizeRow(document.getElementById('prodSizesBuilder'));
     document.getElementById('addSizeRowBtn').addEventListener('click', () => {
         createSizeRow(document.getElementById('prodSizesBuilder'));
@@ -428,10 +397,7 @@ function renderEditImagesList() {
         createSizeRow(document.getElementById('editProdSizesBuilder'));
     });
 
-    // ─── Firebase Storage — նկարների upload/delete ─────────────────────────────
-    // Cloudinary-ն ավտոմատ սեղմում/չափափոխում էր նկարները. Firebase Storage-ը դա չի անում,
-    // ուստի ինքներս ենք սեղմում browser-ում (canvas), նախքան upload անելը՝ որ Storage-ի
-    // ծախսը (Blaze plan-ում $/GB) և կայքի արագությունը մնան ողջամիտ։
+    // ─── Firebase Storage ─────────────────────────────────────────────────────
     function compressImageFile(file, maxWidth = 1000, quality = 0.8) {
         return new Promise((resolve, reject) => {
             const reader = new FileReader();
@@ -462,10 +428,6 @@ function renderEditImagesList() {
         });
     }
 
-    /**
-     * Սեղմում է նկարը (browser-ում) և վերբեռնում Firebase Storage-ում՝ resumable upload-ով
-     * (progress-ի աջակցությամբ)։ Վերադարձնում է հանրային download URL-ը։
-     */
     async function uploadToFirebaseStorage(file, progressBarId, progressTextId) {
         let uploadFile = file;
         try {
@@ -503,10 +465,6 @@ function renderEditImagesList() {
         });
     }
 
-    /**
-     * Վերբեռնում է մի քանի ֆայլ Firebase Storage-ում հերթականությամբ՝ ընդհանուր
-     * progress-ի հետ։ Վերադարձնում է download URL-ների array, նույն կարգով։
-     */
     async function uploadMultipleToFirebaseStorage(files, progressBarId, progressTextId) {
         const urls = [];
         const total = files.length;
@@ -524,22 +482,16 @@ function renderEditImagesList() {
         return urls;
     }
 
-    /**
-     * Ջնջում է նկարը Firebase Storage-ից՝ ըստ իր download URL-ի։ Օգտագործվում է ապրանք/
-     * սլայդեր ջնջելիս կամ նկար հեռացնելիս, որ «որբ» ֆայլեր չմնան ու ավելորդ տեղ չզբաղեցնեն
-     * (Blaze plan-ում Storage-ի պահեստավորումը վճարովի է)։
-     */
     async function deleteFromStorage(url) {
         if (!url || typeof url !== 'string') return;
         try {
             await deleteObject(storageRef(storage, url));
         } catch (err) {
-            // Եթե ֆայլն արդեն ջնջված է կամ URL-ը Storage-ից չէ, պարզապես անտեսում ենք
             console.warn('Storage delete-ը ձախողվեց (հավանաբար արդեն ջնջված է):', err.message);
         }
     }
 
-    // ─── Stock toggle buttons ─────────────────────────────────────────────────
+    // ─── Stock toggle ─────────────────────────────────────────────────────────
     document.getElementById('btnInStock').addEventListener('click', () => {
         editInStock = true;
         document.getElementById('btnInStock').classList.add('active');
@@ -551,7 +503,7 @@ function renderEditImagesList() {
         document.getElementById('btnInStock').classList.remove('active');
     });
 
-    // ─── ԳԼԽԱՎՈՐ (HERO) ՏԵՔՍՏ ───────────────────────────────────────────────────
+    // ─── HERO ─────────────────────────────────────────────────────────────────
     const heroRef = ref(db, 'content/hero');
     onValue(heroRef, (snapshot) => {
         const data = snapshot.val();
@@ -615,7 +567,7 @@ function renderEditImagesList() {
         }
     });
 
-    // ─── PRODUCTS — Paginated Infinite Scroll ─────────────────────────────────
+    // ─── PRODUCTS — 20-ական բեռնում (ուղղված) ────────────────────────────────
     const productsCache = {};
     let productsOldestKey = null;
     let productsLoading = false;
@@ -698,47 +650,65 @@ function renderEditImagesList() {
         productsLoading = true;
         document.getElementById('products-spinner').classList.add('visible');
 
-        let q;
-        if (productsOldestKey === null) {
-            q = query(ref(db, 'products'), orderByKey(), limitToLast(PAGE_SIZE));
-        } else {
-            q = query(ref(db, 'products'), orderByKey(), endBefore(productsOldestKey), limitToLast(PAGE_SIZE));
-        }
+        try {
+            let q;
+            if (productsOldestKey === null) {
+                q = query(ref(db, 'products'), orderByKey(), limitToLast(PAGE_SIZE));
+            } else {
+                q = query(ref(db, 'products'), orderByKey(), endBefore(productsOldestKey), limitToLast(PAGE_SIZE));
+            }
 
-        const snapshot = await get(q);
-        const data = snapshot.val() || {};
-        const keys = Object.keys(data);
+            const snapshot = await get(q);
 
-        if (keys.length === 0) {
-            productsAllLoaded = true;
+            // snapshot.forEach պահպանում է ճիշտ կարգը
+            const rows = [];
+            snapshot.forEach(child => {
+                rows.push({ key: child.key, p: child.val() });
+            });
+
+            if (rows.length === 0) {
+                productsAllLoaded = true;
+                document.getElementById('products-all-loaded').classList.add('visible');
+                return;
+            }
+
+            productsOldestKey = rows[0].key;
+            rows.forEach(r => { productsCache[r.key] = r.p; });
+            renderProductCards(rows.slice().reverse());
+
+            if (rows.length < PAGE_SIZE) {
+                productsAllLoaded = true;
+                document.getElementById('products-all-loaded').classList.add('visible');
+            }
+        } catch (err) {
+            console.error('Products load error:', err);
+        } finally {
             document.getElementById('products-spinner').classList.remove('visible');
-            document.getElementById('products-all-loaded').classList.add('visible');
             productsLoading = false;
-            return;
+            // Եթե sentinel-ը դեռ երևում է էկրանին, շարունակում ենք բեռնել
+            setTimeout(checkProductsSentinel, 0);
         }
-
-        const sortedKeys = keys.sort();
-        productsOldestKey = sortedKeys[0];
-
-        const toRender = sortedKeys.reverse().map(key => {
-            productsCache[key] = data[key];
-            return { key, p: data[key] };
-        });
-        renderProductCards(toRender);
-
-        if (keys.length < PAGE_SIZE) {
-            productsAllLoaded = true;
-            document.getElementById('products-all-loaded').classList.add('visible');
-        }
-
-        document.getElementById('products-spinner').classList.remove('visible');
-        productsLoading = false;
     }
 
-    const productsObserver = new IntersectionObserver((entries) => {
-        if (entries[0].isIntersecting) loadMoreProducts();
-    }, { threshold: 0.1 });
-    productsObserver.observe(document.getElementById('products-sentinel'));
+    function isVisible(el) {
+        return el && el.offsetParent !== null;
+    }
+
+    function checkProductsSentinel() {
+        if (productsLoading || productsAllLoaded) return;
+        const sentinel = document.getElementById('products-sentinel');
+        if (!isVisible(sentinel)) return;
+        const rect = sentinel.getBoundingClientRect();
+        if (rect.top < window.innerHeight + 600) loadMoreProducts();
+    }
+
+    window.addEventListener('scroll', checkProductsSentinel, { passive: true });
+    window.addEventListener('resize', checkProductsSentinel);
+    // .admin-content-ը կարող է ունենալ սեփական scroll
+    document.querySelector('.admin-content')?.addEventListener('scroll', () => {
+        checkProductsSentinel();
+        checkOrdersSentinel();
+    }, { passive: true });
 
     document.getElementById('addProductBtn').addEventListener('click', async () => {
         const title = document.getElementById('prodTitle').value.trim();
@@ -791,7 +761,6 @@ function renderEditImagesList() {
                 });
                 attachEditListener(newKey, newProd);
 
-                // Reset form
                 document.getElementById('prodTitle').value = '';
                 document.getElementById('prodBrand').value = '';
                 document.getElementById('prodCollection').value = '';
@@ -858,8 +827,6 @@ function renderEditImagesList() {
                         img: finalImages[0]
                     });
 
-                    // Ջնջում ենք Storage-ից այն նկարները, որոնք edit-ի ընթացքում հեռացվել են
-                    // (այլևս չկան finalImages-ում), որ «որբ» ֆայլեր չմնան
                     previousImages
                         .filter(u => !finalImages.includes(u))
                         .forEach(deleteFromStorage);
@@ -929,9 +896,6 @@ function renderEditImagesList() {
             card.id = `ocard-${key}`;
             card.style.cssText = 'border:1px solid #eee; padding:15px; margin-bottom:10px; border-radius:8px;';
 
-            // Ապահով DOM-կառուցում — innerHTML-ի փոխարեն createElement/textContent,
-            // որ պատվերի name/phone/items դաշտերը երբեք չմեկնաբանվեն որպես HTML
-            // (այս դաշտերը գալիս են site-ի հանրային պատվեր-ձևից, ուստի պոտենցիալ untrusted են)
             const pCustomer = document.createElement('p');
             const bCustomer = document.createElement('b');
             bCustomer.textContent = 'Հաճախորդ:';
@@ -969,43 +933,50 @@ function renderEditImagesList() {
         ordersLoading = true;
         document.getElementById('orders-spinner').classList.add('visible');
 
-        let q;
-        if (ordersOldestKey === null) {
-            q = query(ref(db, 'orders'), orderByKey(), limitToLast(PAGE_SIZE));
-        } else {
-            q = query(ref(db, 'orders'), orderByKey(), endBefore(ordersOldestKey), limitToLast(PAGE_SIZE));
-        }
+        try {
+            let q;
+            if (ordersOldestKey === null) {
+                q = query(ref(db, 'orders'), orderByKey(), limitToLast(PAGE_SIZE));
+            } else {
+                q = query(ref(db, 'orders'), orderByKey(), endBefore(ordersOldestKey), limitToLast(PAGE_SIZE));
+            }
 
-        const snapshot = await get(q);
-        const data = snapshot.val() || {};
-        const keys = Object.keys(data);
+            const snapshot = await get(q);
+            const rows = [];
+            snapshot.forEach(child => {
+                rows.push({ key: child.key, o: child.val() });
+            });
 
-        if (keys.length === 0) {
-            ordersAllLoaded = true;
+            if (rows.length === 0) {
+                ordersAllLoaded = true;
+                document.getElementById('orders-all-loaded').classList.add('visible');
+                return;
+            }
+
+            ordersOldestKey = rows[0].key;
+            renderOrderCards(rows.slice().reverse());
+
+            if (rows.length < PAGE_SIZE) {
+                ordersAllLoaded = true;
+                document.getElementById('orders-all-loaded').classList.add('visible');
+            }
+        } catch (err) {
+            console.error('Orders load error:', err);
+        } finally {
             document.getElementById('orders-spinner').classList.remove('visible');
-            document.getElementById('orders-all-loaded').classList.add('visible');
             ordersLoading = false;
-            return;
+            setTimeout(checkOrdersSentinel, 0);
         }
-
-        const sortedKeys = keys.sort();
-        ordersOldestKey = sortedKeys[0];
-        const toRender = sortedKeys.reverse().map(key => ({ key, o: data[key] }));
-        renderOrderCards(toRender);
-
-        if (keys.length < PAGE_SIZE) {
-            ordersAllLoaded = true;
-            document.getElementById('orders-all-loaded').classList.add('visible');
-        }
-
-        document.getElementById('orders-spinner').classList.remove('visible');
-        ordersLoading = false;
     }
 
-    const ordersObserver = new IntersectionObserver((entries) => {
-        if (entries[0].isIntersecting) loadMoreOrders();
-    }, { threshold: 0.1 });
-    ordersObserver.observe(document.getElementById('orders-sentinel'));
+    function checkOrdersSentinel() {
+        if (ordersLoading || ordersAllLoaded || !ordersTabInitialized) return;
+        const sentinel = document.getElementById('orders-sentinel');
+        if (!isVisible(sentinel)) return;
+        const rect = sentinel.getBoundingClientRect();
+        if (rect.top < window.innerHeight + 600) loadMoreOrders();
+    }
+    window.addEventListener('scroll', checkOrdersSentinel, { passive: true });
 
     let ordersTabInitialized = false;
     document.querySelectorAll('.tab-btn').forEach(btn => {
@@ -1017,6 +988,9 @@ function renderEditImagesList() {
             if (btn.dataset.tab === 'orders-tab' && !ordersTabInitialized) {
                 ordersTabInitialized = true;
                 loadMoreOrders();
+            }
+            if (btn.dataset.tab === 'products-tab') {
+                setTimeout(checkProductsSentinel, 0);
             }
         });
     });
