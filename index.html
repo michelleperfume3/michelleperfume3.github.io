@@ -385,118 +385,104 @@
             window.location.href = `prod.html?id=${encodeURIComponent(prod.id)}`;
         }
 
-        function renderProducts(products) {
-            const container = document.getElementById('products-container');
-            container.innerHTML = '';
-            if (products.length === 0) {
-                container.innerHTML = '<p style="text-align:center; color:#888; grid-column:1/-1; padding:40px 0;">Ապրանք չի գտնվել</p>';
-                return;
-            }
-            products.forEach(prod => {
-                const priceHTML = buildPriceHTML(prod.sizes);
-                const cardImages = normalizeImages(prod);
-                const thumbSrc = cloudinaryThumb(cardImages[0], 400);
-                const pinnedBadge = prod.pinned ? `<span style="position:absolute; top:5px; left:5px; background:#ff3b30; color:#fff; font-size:10px; padding:3px 8px; border-radius:20px; margin:5px; font-weight:700; z-index:1;">TOP</span>` : '';
-                const newBadge = prod.isNew ? `<span style="position:absolute; top:5px; right:5px; background:#28a745; color:#fff; font-size:10px; padding:3px 8px; border-radius:20px; margin:5px; font-weight:700; z-index:1;">NEW</span>` : '';
-                const card = document.createElement('div');
-                card.className = 'product-card';
-                card.style.position = 'relative';
-                card.innerHTML = `
-                    ${pinnedBadge}
-                    ${newBadge}
-                    <img src="${thumbSrc}" class="product-img" loading="lazy" alt="${prod.title}">
-                    <div class="product-info">
-                        <div>
-                            <h3 class="product-title">${prod.title}</h3>
-                            <div class="product-meta-preview">${buildMetaPreview(prod)}</div>
-                        </div>
-                        <div class="product-price-box">${priceHTML}</div>
-                        <button class="card-view-btn">Մանրամասն</button>
-                    </div>
-                `;
-                card.addEventListener('click', () => goToProduct(prod));
-                container.appendChild(card);
-            });
-        }
-
-        // ─── ԲԵՌՆՈՒՄ 20-ԱԿԱՆ (ուղղված) ─────────────────────────────────────────
-        let lastLoadedKey = null;
-        let isLoadingProducts = false;
-        let allLoaded = false;
+        // ─── ԲԵՌՆՈՒՄ. ամբողջ ցուցակը մեկ անգամ, ցուցադրում՝ 20-ական ─────────────
         const PRODUCTS_LIMIT = 20;
         const productsRef = ref(db, 'products');
-
         let allProductsCache = null;
         let isSearchMode = false;
+        let currentList = [];
+        let visibleCount = 0;
 
         function setStatus(text) {
             const el = document.getElementById('products-sentinel');
             if (el) el.textContent = text;
         }
+        function updateStatus() {
+            setStatus(currentList.length > 0 ? `Ցուցադրված՝ ${visibleCount} / ${currentList.length}` : '');
+        }
 
-        // Եթե sentinel-ը մոտ է էկրանին (կամ էջը կարճ է), բեռնում է հաջորդ 20-ը
+        function createCard(prod) {
+            const priceHTML = buildPriceHTML(prod.sizes);
+            const cardImages = normalizeImages(prod);
+            const thumbSrc = cloudinaryThumb(cardImages[0], 400);
+            const pinnedBadge = prod.pinned ? `<span style="position:absolute; top:5px; left:5px; background:#ff3b30; color:#fff; font-size:10px; padding:3px 8px; border-radius:20px; margin:5px; font-weight:700; z-index:1;">TOP</span>` : '';
+            const newBadge = prod.isNew ? `<span style="position:absolute; top:5px; right:5px; background:#28a745; color:#fff; font-size:10px; padding:3px 8px; border-radius:20px; margin:5px; font-weight:700; z-index:1;">NEW</span>` : '';
+            const card = document.createElement('div');
+            card.className = 'product-card';
+            card.style.position = 'relative';
+            card.innerHTML = `
+                ${pinnedBadge}
+                ${newBadge}
+                <img src="${thumbSrc || ''}" class="product-img" loading="lazy" alt="${prod.title || ''}">
+                <div class="product-info">
+                    <div>
+                        <h3 class="product-title">${prod.title || ''}</h3>
+                        <div class="product-meta-preview">${buildMetaPreview(prod)}</div>
+                    </div>
+                    <div class="product-price-box">${priceHTML}</div>
+                    <button class="card-view-btn">Մանրամասն</button>
+                </div>
+            `;
+            card.addEventListener('click', () => goToProduct(prod));
+            return card;
+        }
+
+        function showMoreCards() {
+            const container = document.getElementById('products-container');
+            const next = currentList.slice(visibleCount, visibleCount + PRODUCTS_LIMIT);
+            next.forEach(p => container.appendChild(createCard(p)));
+            visibleCount += next.length;
+            updateStatus();
+        }
+
+        function renderProducts(products) {
+            currentList = products;
+            visibleCount = 0;
+            const container = document.getElementById('products-container');
+            container.innerHTML = '';
+            if (products.length === 0) {
+                container.innerHTML = '<p style="text-align:center; color:#888; grid-column:1/-1; padding:40px 0;">Ապրանք չի գտնվել</p>';
+                updateStatus();
+                return;
+            }
+            showMoreCards();
+        }
+
+        // Եթե sentinel-ը մոտ է էկրանին (կամ էջը կարճ է), ցույց է տալիս հաջորդ 20-ը
         function checkLoadMore() {
-            if (isSearchMode || isLoadingProducts || allLoaded) return;
+            if (visibleCount >= currentList.length) return;
             const sentinel = document.getElementById('products-sentinel');
             if (!sentinel) return;
             const rect = sentinel.getBoundingClientRect();
             if (rect.top < window.innerHeight + 800) {
-                loadProductsPage();
+                showMoreCards();
+                setTimeout(checkLoadMore, 0);
             }
         }
 
-        async function loadProductsPage() {
-            if (isSearchMode || isLoadingProducts || allLoaded) return;
-            isLoadingProducts = true;
+        async function loadAllProducts() {
             setStatus('Բեռնվում է...');
-
-            let dbQuery;
-            if (!lastLoadedKey) {
-                dbQuery = query(productsRef, orderByKey(), limitToFirst(PRODUCTS_LIMIT));
-            } else {
-                dbQuery = query(productsRef, orderByKey(), startAfter(lastLoadedKey), limitToFirst(PRODUCTS_LIMIT));
-            }
-
             try {
-                const snapshot = await get(dbQuery);
-                if (!snapshot.exists()) {
-                    allLoaded = true;
-                    return;
-                }
-
-                // snapshot.forEach-ը պահպանում է Firebase-ի ճիշտ կարգը
-                const rawItems = [];
+                const snapshot = await get(productsRef);
+                const items = [];
                 snapshot.forEach(child => {
-                    rawItems.push({ id: child.key, ...child.val() });
+                    items.push({ id: child.key, ...child.val() });
                 });
-
-                if (rawItems.length < PRODUCTS_LIMIT) allLoaded = true;
-                lastLoadedKey = rawItems[rawItems.length - 1].id;
-
-                const newProducts = rawItems.filter(p => p.inStock !== false);
-
-                allProducts = allProducts.concat(newProducts);
-                allProducts.sort((a, b) => {
-                    const aPinned = a.pinned === true ? 1 : 0;
-                    const bPinned = b.pinned === true ? 1 : 0;
-                    return bPinned - aPinned;
-                });
-                newProducts.forEach(registerBrandAndCollection);
+                allProducts = items.filter(p => p.inStock !== false);
+                console.log(`Բազայում ապրանքներ՝ ${items.length}, առկա չէ՝ ${items.length - allProducts.length}, ցուցադրվելու՝ ${allProducts.length}`);
+                allProducts.sort((a, b) => (b.pinned === true ? 1 : 0) - (a.pinned === true ? 1 : 0));
+                allProducts.forEach(registerBrandAndCollection);
                 refreshDisplay();
             } catch (error) {
                 console.error("Error fetching products:", error);
-            } finally {
-                isLoadingProducts = false;
-                setStatus(allLoaded ? '' : '');
-                // Եթե էջը դեռ կարճ է, շարունակում ենք բեռնել
-                setTimeout(checkLoadMore, 0);
+                setStatus('Չհաջողվեց բեռնել ապրանքները։ Թարմացրեք էջը։');
             }
         }
 
         window.addEventListener('scroll', checkLoadMore, { passive: true });
         window.addEventListener('resize', checkLoadMore);
 
-        loadProductsPage();
+        loadAllProducts();
 
         document.querySelectorAll('.filter-btn[data-filter]').forEach(btn => {
             btn.addEventListener('click', () => {
