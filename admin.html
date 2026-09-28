@@ -645,47 +645,42 @@
         });
     }
 
+    let productsAllRows = null;
+    let productsShown = 0;
+
     async function loadMoreProducts() {
         if (productsLoading || productsAllLoaded) return;
         productsLoading = true;
         document.getElementById('products-spinner').classList.add('visible');
 
         try {
-            let q;
-            if (productsOldestKey === null) {
-                q = query(ref(db, 'products'), orderByKey(), limitToLast(PAGE_SIZE));
-            } else {
-                q = query(ref(db, 'products'), orderByKey(), endBefore(productsOldestKey), limitToLast(PAGE_SIZE));
+            // Ամբողջ ցուցակը քաշում ենք մեկ անգամ, ցուցադրում՝ 20-ական (նորերը՝ առաջինը)
+            if (productsAllRows === null) {
+                const snapshot = await get(ref(db, 'products'));
+                const rows = [];
+                snapshot.forEach(child => {
+                    rows.push({ key: child.key, p: child.val() });
+                });
+                productsAllRows = rows.reverse();
+                console.log('Բազայում ապրանքներ՝', productsAllRows.length);
             }
 
-            const snapshot = await get(q);
+            const next = productsAllRows.slice(productsShown, productsShown + PAGE_SIZE);
+            next.forEach(r => { productsCache[r.key] = r.p; });
+            renderProductCards(next);
+            productsShown += next.length;
 
-            // snapshot.forEach պահպանում է ճիշտ կարգը
-            const rows = [];
-            snapshot.forEach(child => {
-                rows.push({ key: child.key, p: child.val() });
-            });
-
-            if (rows.length === 0) {
+            if (productsShown >= productsAllRows.length) {
                 productsAllLoaded = true;
-                document.getElementById('products-all-loaded').classList.add('visible');
-                return;
-            }
-
-            productsOldestKey = rows[0].key;
-            rows.forEach(r => { productsCache[r.key] = r.p; });
-            renderProductCards(rows.slice().reverse());
-
-            if (rows.length < PAGE_SIZE) {
-                productsAllLoaded = true;
-                document.getElementById('products-all-loaded').classList.add('visible');
+                const msg = document.getElementById('products-all-loaded');
+                msg.textContent = `✓ Բոլոր ապրանքները ցուցադրված են (${productsAllRows.length})`;
+                msg.classList.add('visible');
             }
         } catch (err) {
             console.error('Products load error:', err);
         } finally {
             document.getElementById('products-spinner').classList.remove('visible');
             productsLoading = false;
-            // Եթե sentinel-ը դեռ երևում է էկրանին, շարունակում ենք բեռնել
             setTimeout(checkProductsSentinel, 0);
         }
     }
