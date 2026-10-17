@@ -102,6 +102,79 @@
         .logo img { display: block; height: auto; max-height: 45px; width: auto; }
 
         .load-status { text-align: center; color: #888; font-size: 13px; padding: 20px 0; min-height: 1px; }
+
+        /* ─── Գնի սանդղակ ─── */
+        .price-range-box { max-width: 520px; margin: 0 auto 30px; padding: 14px 18px 18px; background: #f8f9fa; border: 1px solid #eaeaec; border-radius: 14px; }
+        .price-range-head { display: flex; justify-content: space-between; align-items: center; font-size: 14px; color: #555; margin-bottom: 14px; }
+        .price-range-head b { color: #000; font-weight: 700; }
+        .dual-range { position: relative; height: 24px; }
+        .dual-track { position: absolute; top: 50%; left: 0; right: 0; height: 4px; margin-top: -2px; background: #ddd; border-radius: 4px; }
+        .dual-fill { position: absolute; top: 50%; height: 4px; margin-top: -2px; background: #000; border-radius: 4px; }
+        .dual-range input[type=range] { position: absolute; left: 0; top: 0; width: 100%; height: 24px; margin: 0; background: none; pointer-events: none; -webkit-appearance: none; appearance: none; }
+        .dual-range input[type=range]::-webkit-slider-runnable-track { background: transparent; height: 24px; }
+        .dual-range input[type=range]::-moz-range-track { background: transparent; height: 24px; }
+        .dual-range input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; pointer-events: auto; width: 22px; height: 22px; margin-top: 1px; border-radius: 50%; background: #fff; border: 2px solid #000; box-shadow: 0 2px 6px rgba(0,0,0,0.2); cursor: pointer; }
+        .dual-range input[type=range]::-moz-range-thumb { pointer-events: auto; width: 18px; height: 18px; border-radius: 50%; background: #fff; border: 2px solid #000; box-shadow: 0 2px 6px rgba(0,0,0,0.2); cursor: pointer; }
+        .price-range-ends { display: flex; justify-content: space-between; font-size: 11px; color: #999; margin-top: 6px; }
+        .product-scents { font-size: 12px; color: #6b5fb3; margin-bottom: 6px; line-height: 1.3; }
+
+        /* ─── Կատեգորիաների բլոկ (Կանացի / Տղամարդու / Նորույթ) ─── */
+        .category-section { padding: 30px 0 10px; background-color: #ffffff; }
+        .category-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+        @media (min-width: 768px) { .category-grid { gap: 24px; } }
+        .category-tile {
+            position: relative;
+            display: block;
+            aspect-ratio: 3 / 4;
+            border-radius: 14px;
+            overflow: hidden;
+            cursor: pointer;
+            background: linear-gradient(135deg, #E2DEF7, #cfc8f0);
+            border: none;
+            padding: 0;
+            font-family: inherit;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .category-tile:hover { transform: translateY(-4px); box-shadow: 0 8px 20px rgba(0,0,0,0.12); }
+        .category-tile img {
+            position: absolute; inset: 0;
+            width: 100%; height: 100%;
+            object-fit: cover;
+            display: none;
+            transition: transform 0.5s;
+        }
+        .category-tile.has-img img { display: block; }
+        .category-tile:hover img { transform: scale(1.06); }
+        .category-tile::after {
+            content: '';
+            position: absolute; inset: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0) 55%);
+            pointer-events: none;
+        }
+        .category-label {
+            position: absolute; left: 0; right: 0; bottom: 12px;
+            z-index: 2;
+            text-align: center;
+            color: #fff;
+            font-weight: 700;
+            font-size: 15px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+        @media (min-width: 768px) { .category-label { font-size: 20px; bottom: 18px; } }
+        @media (max-width: 380px) { .category-label { font-size: 12px; bottom: 8px; } }
+        .category-tile.tile-new .category-badge {
+            position: absolute; top: 10px; right: 10px; z-index: 2;
+            background: #28a745; color: #fff;
+            font-size: 10px; font-weight: 700;
+            padding: 3px 9px; border-radius: 20px;
+        }
+        .category-tile .category-fallback-icon {
+            position: absolute; inset: 0;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 44px; z-index: 1;
+        }
+        .category-tile.has-img .category-fallback-icon { display: none; }
     </style>
 </head>
 <body>
@@ -137,6 +210,30 @@
         </div>
     </section>
 
+    <!-- ─── Կանացի / Տղամարդու / Նորույթ ─── -->
+    <section class="category-section">
+        <div class="container">
+            <div class="category-grid">
+                <button type="button" class="category-tile" data-cat="Կանացի" id="tileWomen">
+                    <img src="" alt="Կանացի">
+                    <span class="category-fallback-icon">👩</span>
+                    <span class="category-label">Կանացի</span>
+                </button>
+                <button type="button" class="category-tile" data-cat="Տղամարդու" id="tileMen">
+                    <img src="" alt="Տղամարդու">
+                    <span class="category-fallback-icon">👨</span>
+                    <span class="category-label">Տղամարդու</span>
+                </button>
+                <button type="button" class="category-tile tile-new" data-cat="new" id="tileNew">
+                    <img src="" alt="Նորույթ">
+                    <span class="category-fallback-icon">✨</span>
+                    <span class="category-badge">NEW</span>
+                    <span class="category-label">Նորույթ</span>
+                </button>
+            </div>
+        </div>
+    </section>
+
     <section class="products-section" id="catalog">
         <div class="container">
             <h2 class="section-title">Մեր Տեսականին</h2>
@@ -154,11 +251,30 @@
                 <select id="collectionFilter" class="filter-select">
                     <option value="all">Բոլոր Հավաքածուները</option>
                 </select>
+                <select id="scentFilter" class="filter-select">
+                    <option value="all">Բոլոր Բույրերը</option>
+                </select>
                 <select id="priceSort" class="filter-select">
                     <option value="default">Գինը</option>
                     <option value="asc">Աճման</option>
                     <option value="desc">Նվազման</option>
                 </select>
+            </div>
+            <div class="price-range-box" id="priceRangeBox" style="display:none;">
+                <div class="price-range-head">
+                    <span>Գնի միջակայք</span>
+                    <span><b id="priceMinLabel">0</b> – <b id="priceMaxLabel">0</b> AMD</span>
+                </div>
+                <div class="dual-range">
+                    <div class="dual-track"></div>
+                    <div class="dual-fill" id="dualFill"></div>
+                    <input type="range" id="priceMinRange" aria-label="Նվազագույն գին">
+                    <input type="range" id="priceMaxRange" aria-label="Առավելագույն գին">
+                </div>
+                <div class="price-range-ends">
+                    <span id="priceBoundMinLabel"></span>
+                    <span id="priceBoundMaxLabel"></span>
+                </div>
             </div>
             <div class="products-grid" id="products-container"></div>
             <div id="products-sentinel" class="load-status"></div>
@@ -237,6 +353,36 @@
         let activeNewOnly = false;
         const knownBrands = new Set();
         const knownCollections = new Set();
+
+        // ─── Բույրեր (admin-ում լրացվող `scents` դաշտ՝ ստորակետով բաժանված տեքստ կամ զանգված) ───
+        let activeScent = 'all';
+        const knownScents = new Set();
+        function getScents(p) {
+            let s = p.scents;
+            if (!s) return [];
+            if (typeof s === 'string') s = s.split(/[,;|\n]/);
+            else if (!Array.isArray(s) && typeof s === 'object') s = Object.values(s);
+            if (!Array.isArray(s)) return [];
+            return s.map(x => String(x).trim()).filter(Boolean);
+        }
+        function registerScents(p) {
+            getScents(p).forEach(sc => {
+                const key = sc.toLowerCase();
+                if (knownScents.has(key)) return;
+                knownScents.add(key);
+                const opt = document.createElement('option');
+                opt.value = key;
+                opt.text = sc;
+                document.getElementById('scentFilter').appendChild(opt);
+            });
+        }
+
+        // ─── Գնի սանդղակ ───
+        const PRICE_STEP = 100;
+        let priceBoundMin = 0, priceBoundMax = 0, priceSelMin = 0, priceSelMax = 0, priceFilterOn = false;
+        function sizeEffPrice(s) {
+            return (s.salePrice && Number(s.salePrice) > 0) ? Number(s.salePrice) : Number(s.price);
+        }
 
         document.getElementById('burgerToggle').addEventListener('click', function() {
             this.classList.toggle('open');
@@ -337,10 +483,19 @@
             if (activeBrand !== 'all' && (p.brand || '') !== activeBrand) return false;
             if (activeCollection !== 'all' && (p.collection || '') !== activeCollection) return false;
             if (activeNewOnly && !p.isNew) return false;
+            if (activeScent !== 'all' && !getScents(p).some(sc => sc.toLowerCase() === activeScent)) return false;
+            if (priceFilterOn) {
+                const ok = normalizeSizes(p.sizes).some(s => {
+                    const v = sizeEffPrice(s);
+                    return v >= priceSelMin && v <= priceSelMax;
+                });
+                if (!ok) return false;
+            }
             return true;
         }
 
         function registerBrandAndCollection(p) {
+            registerScents(p);
             if (p.brand && !knownBrands.has(p.brand)) {
                 knownBrands.add(p.brand);
                 const opt = document.createElement('option');
@@ -418,6 +573,7 @@
                     <div>
                         <h3 class="product-title">${prod.title || ''}</h3>
                         <div class="product-meta-preview">${buildMetaPreview(prod)}</div>
+                        ${getScents(prod).length ? `<div class="product-scents">🌸 ${getScents(prod).join(', ')}</div>` : ''}
                     </div>
                     <div class="product-price-box">${priceHTML}</div>
                     <button class="card-view-btn">Մանրամասն</button>
@@ -472,7 +628,9 @@
                 console.log(`Բազայում ապրանքներ՝ ${items.length}, առկա չէ՝ ${items.length - allProducts.length}, ցուցադրվելու՝ ${allProducts.length}`);
                 allProducts.sort((a, b) => (b.pinned === true ? 1 : 0) - (a.pinned === true ? 1 : 0));
                 allProducts.forEach(registerBrandAndCollection);
+                initPriceSlider();
                 refreshDisplay();
+                updateCategoryImages();
             } catch (error) {
                 console.error("Error fetching products:", error);
                 setStatus('Չհաջողվեց բեռնել ապրանքները։ Թարմացրեք էջը։');
@@ -483,6 +641,63 @@
         window.addEventListener('resize', checkLoadMore);
 
         loadAllProducts();
+
+        // ─── Կատեգորիաների նկարներ (Կանացի / Տղամարդու / Նորույթ) ───────────────
+        // Առաջնահերթություն՝ Firebase-ի content/categories/{women|men|new} (նկարի հղում),
+        // եթե չկա՝ վերցվում է համապատասխան կատեգորիայի առաջին ապրանքի նկարը։
+        let categoryOverrides = {};
+        onValue(ref(db, 'content/categories'), (snapshot) => {
+            categoryOverrides = snapshot.val() || {};
+            updateCategoryImages();
+        });
+
+        function setTileImage(tileId, url) {
+            const tile = document.getElementById(tileId);
+            if (!tile) return;
+            const img = tile.querySelector('img');
+            if (url) {
+                img.src = url;
+                tile.classList.add('has-img');
+            } else {
+                img.removeAttribute('src');
+                tile.classList.remove('has-img');
+            }
+        }
+
+        function firstImageOf(predicate) {
+            const prod = allProducts.find(p => predicate(p) && normalizeImages(p).length > 0);
+            return prod ? cloudinaryThumb(normalizeImages(prod)[0], 600) : '';
+        }
+
+        function updateCategoryImages() {
+            const ov = (v) => (typeof v === 'object' && v !== null ? v.img : v) || '';
+            setTileImage('tileWomen', ov(categoryOverrides.women) || firstImageOf(p => p.gender === 'Կանացի'));
+            setTileImage('tileMen', ov(categoryOverrides.men) || firstImageOf(p => p.gender === 'Տղամարդու'));
+            setTileImage('tileNew', ov(categoryOverrides.new) || firstImageOf(p => p.isNew));
+        }
+
+        function syncFilterButtons() {
+            document.querySelectorAll('.filter-btn[data-filter]').forEach(b => {
+                b.classList.toggle('active', b.dataset.filter === activeGender);
+            });
+            document.getElementById('newOnlyBtn').classList.toggle('active', activeNewOnly);
+        }
+
+        document.querySelectorAll('.category-tile').forEach(tile => {
+            tile.addEventListener('click', () => {
+                const cat = tile.dataset.cat;
+                if (cat === 'new') {
+                    activeNewOnly = true;
+                    activeGender = 'all';
+                } else {
+                    activeGender = cat;
+                    activeNewOnly = false;
+                }
+                syncFilterButtons();
+                refreshDisplay();
+                document.getElementById('catalog').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+        });
 
         document.querySelectorAll('.filter-btn[data-filter]').forEach(btn => {
             btn.addEventListener('click', () => {
@@ -509,6 +724,79 @@
             activeCollection = this.value;
             refreshDisplay();
         });
+
+        document.getElementById('scentFilter').addEventListener('change', function() {
+            activeScent = this.value;
+            refreshDisplay();
+        });
+
+        // ─── Գնի սանդղակի տրամաբանություն ───
+        function fmtPrice(n) { return Number(n).toLocaleString('en-US').replace(/,/g, ' '); }
+
+        function updatePriceUI() {
+            const minR = document.getElementById('priceMinRange');
+            const maxR = document.getElementById('priceMaxRange');
+            const span = Math.max(priceBoundMax - priceBoundMin, 1);
+            const left = ((priceSelMin - priceBoundMin) / span) * 100;
+            const right = ((priceSelMax - priceBoundMin) / span) * 100;
+            const fill = document.getElementById('dualFill');
+            fill.style.left = left + '%';
+            fill.style.width = (right - left) + '%';
+            document.getElementById('priceMinLabel').innerText = fmtPrice(priceSelMin);
+            document.getElementById('priceMaxLabel').innerText = fmtPrice(priceSelMax);
+            // Երբ երկու բռնակները մոտ են աջ ծայրին, ձախը պետք է մնա վերևում
+            minR.style.zIndex = (priceSelMin >= priceBoundMax - span * 0.1) ? 5 : 3;
+            maxR.style.zIndex = 4;
+        }
+
+        let priceDebounce = null;
+        function onPriceInput(changed) {
+            const minR = document.getElementById('priceMinRange');
+            const maxR = document.getElementById('priceMaxRange');
+            let a = Number(minR.value), b = Number(maxR.value);
+            if (a > b) {
+                if (changed === 'min') { a = b; minR.value = a; }
+                else { b = a; maxR.value = b; }
+            }
+            priceSelMin = a;
+            priceSelMax = b;
+            priceFilterOn = priceSelMin > priceBoundMin || priceSelMax < priceBoundMax;
+            updatePriceUI();
+            clearTimeout(priceDebounce);
+            priceDebounce = setTimeout(refreshDisplay, 150);
+        }
+
+        function initPriceSlider() {
+            const prices = [];
+            allProducts.forEach(p => normalizeSizes(p.sizes).forEach(s => {
+                const v = sizeEffPrice(s);
+                if (v > 0) prices.push(v);
+            }));
+            const box = document.getElementById('priceRangeBox');
+            if (prices.length === 0) { box.style.display = 'none'; return; }
+            priceBoundMin = Math.floor(Math.min(...prices) / PRICE_STEP) * PRICE_STEP;
+            priceBoundMax = Math.ceil(Math.max(...prices) / PRICE_STEP) * PRICE_STEP;
+            if (priceBoundMax <= priceBoundMin) priceBoundMax = priceBoundMin + PRICE_STEP;
+            priceSelMin = priceBoundMin;
+            priceSelMax = priceBoundMax;
+            priceFilterOn = false;
+            const minR = document.getElementById('priceMinRange');
+            const maxR = document.getElementById('priceMaxRange');
+            [minR, maxR].forEach(r => {
+                r.min = priceBoundMin;
+                r.max = priceBoundMax;
+                r.step = PRICE_STEP;
+            });
+            minR.value = priceSelMin;
+            maxR.value = priceSelMax;
+            document.getElementById('priceBoundMinLabel').innerText = fmtPrice(priceBoundMin) + ' AMD';
+            document.getElementById('priceBoundMaxLabel').innerText = fmtPrice(priceBoundMax) + ' AMD';
+            box.style.display = 'block';
+            updatePriceUI();
+        }
+
+        document.getElementById('priceMinRange').addEventListener('input', () => onPriceInput('min'));
+        document.getElementById('priceMaxRange').addEventListener('input', () => onPriceInput('max'));
 
         function updateCartUI() {
             cart = getCart();
@@ -682,7 +970,8 @@
                     const title = p.title ? p.title.toLowerCase() : "";
                     const brand = p.brand ? p.brand.toLowerCase() : "";
                     const description = p.bio ? p.bio.toLowerCase() : "";
-                    return title.includes(currentInput) || brand.includes(currentInput) || description.includes(currentInput);
+                    const scentsText = getScents(p).join(' ').toLowerCase();
+                    return title.includes(currentInput) || brand.includes(currentInput) || description.includes(currentInput) || scentsText.includes(currentInput);
                 });
 
             renderProducts(applySort(matched));
