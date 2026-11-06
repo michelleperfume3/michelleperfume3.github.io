@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Michelle Perfume | Ապրանքի մանրամասներ</title>
+    <title>Michelle Perfume</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <!-- Swiper CSS/JS - unpkg-ով (jsDelivr-ի փոխարեն), քանի որ jsDelivr-ը որոշ ցանցերում/browser-ներում blocked էր
          և Swiper-ի CSS-ը չէր բեռնվում, ինչի հետևանքով .swiper-slide-ի width-ը ստանում էր անվավեր հսկայական
@@ -14,6 +14,9 @@
     <!-- Կայքի ընդհանուր ոճը (բրենդի փոփոխականներ, header, footer) + այս էջին հատուկ ոճերը -->
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="prod.css">
+
+    <!-- Լեզվի համակարգ -->
+    <script src="i18n.js"></script>
 
     <style>
         /* ─── Social / Call կոճակներ ─── */
@@ -40,24 +43,25 @@
             <button class="burger-menu" id="burgerToggle" aria-label="Menu"><span></span><span></span></button>
             <div class="logo"><a href="index.html"><img src="michelle.jpg" alt="Michelle"></a></div>
             <nav class="nav-menu desktop-only">
-                <ul><li><a href="index.html">Գլխավոր</a></li><li><a href="com.html">Մեր մասին</a></li></ul>
+                <ul><li><a href="index.html" data-i18n="nav_home">Գլխավոր</a></li><li><a href="com.html" data-i18n="nav_about">Մեր մասին</a></li></ul>
             </nav>
-            <div class="header-actions"><a href="#" class="cart-btn" id="openCartBtn"><span class="cart-text">Զամբյուղ</span> (<span id="cartCount">0</span>)</a></div>
+            <!-- Լեզվի ընտրիչը ավտոմատ ավելանում է այստեղ (i18n.js) -->
+            <div class="header-actions"><a href="#" class="cart-btn" id="openCartBtn"><span class="cart-text" data-i18n="cart">Զամբյուղ</span> (<span id="cartCount">0</span>)</a></div>
         </div>
     </header>
 
     <div class="mobile-nav-overlay" id="mobileMenu">
-        <ul class="mobile-menu-links"><li><a href="index.html">Գլխավոր</a></li>
-        <li><a href="com.html" class="about-btn-link">Մեր մասին</a></li>
+        <ul class="mobile-menu-links"><li><a href="index.html" data-i18n="nav_home">Գլխավոր</a></li>
+        <li><a href="com.html" class="about-btn-link" data-i18n="nav_about">Մեր մասին</a></li>
         </ul>
     </div>
 
     <section class="prod-page-section">
         <div class="container">
-            <a href="index.html#catalog" class="prod-back-link">← Վերադառնալ կատալոգ</a>
+            <a href="index.html#catalog" class="prod-back-link" data-i18n="back_catalog">← Վերադառնալ կատալոգ</a>
 
-            <div id="prodLoadingState" class="prod-loading">Բեռնվում է...</div>
-            <div id="prodNotFoundState" class="prod-notfound" style="display:none;">Ապրանքը չի գտնվել կամ ջնջվել է։</div>
+            <div id="prodLoadingState" class="prod-loading" data-i18n="loading">Բեռնվում է...</div>
+            <div id="prodNotFoundState" class="prod-notfound" style="display:none;" data-i18n="notfound">Ապրանքը չի գտնվել կամ ջնջվել է։</div>
 
             <div class="prod-layout" id="prodLayout" style="display:none;">
                 <div class="prod-img-wrap">
@@ -77,39 +81,39 @@
                     <div class="prod-tags">
                         <span class="prod-tag" id="prodGenderTag">Unisex</span>
                         <span class="prod-tag" id="prodMlTag"></span>
-                        <span class="prod-tag out" id="prodStockTag" style="display:none;">Առկա չէ</span>
+                        <span class="prod-tag out" id="prodStockTag" style="display:none;" data-i18n="out_stock">Առկա չէ</span>
                     </div>
 
                     <div class="prod-details-box">
-                        <p>Ապրանքանիշ (Բրենդ)՝ <span id="detBrand">---</span></p>
-                        <p>Նախատեսված է՝ <span id="detGender">---</span></p>
-                        <p id="detCollectionRow" style="display:none;">Հավաքածու՝ <span id="detCollection">---</span></p>
-                        <p style="margin-top: 12px; font-weight: 600; color: #000;">Ընտրեք ծավալը (մլ)՝</p>
+                        <p><span data-i18n="p_brand">Ապրանքանիշ (Բրենդ)՝</span> <span id="detBrand">---</span></p>
+                        <p><span data-i18n="p_for">Նախատեսված է՝</span> <span id="detGender">---</span></p>
+                        <p id="detCollectionRow" style="display:none;"><span data-i18n="p_collection">Հավաքածու՝</span> <span id="detCollection">---</span></p>
+                        <p style="margin-top: 12px; font-weight: 600; color: #000;" data-i18n="p_choose">Ընտրեք ծավալը (մլ)՝</p>
                         <select id="detMlSelect" class="modal-input" style="margin-bottom: 0;"></select>
                     </div>
 
                     <div class="prod-bio-box">
-                        <div class="prod-bio-title">ԲԻՕ</div>
+                        <div class="prod-bio-title" data-i18n="bio_title">ԲԻՕ</div>
                         <p class="prod-bio-text" id="prodBioText"></p>
                     </div>
 
                     <div class="dynamic-price-box">
-                        <div class="price-label">Ընդհանուր Արժեքը</div>
+                        <div class="price-label" data-i18n="total_value">Ընդհանուր Արժեքը</div>
                         <div class="modal-prices-display">
                             <span class="price-value" id="detPriceOld"></span>
                             <span class="price-value" id="detPrice">0</span>
                             <span style="font-weight: 600; color: #000;">AMD</span>
                         </div>
                     </div>
-                    <span class="credit-hint"> Գործում է նաև անտոկոս ապառիկ վաճառք 3 ամիս ժամկետով </span>
-                    <img src="8834.jpg" alt="Ապառիկ" class="credit-logo">
+                    <span class="credit-hint" data-i18n="installment"> Գործում է նաև անտոկոս ապառիկ վաճառք 3 ամիս ժամկետով </span>
+                    <img src="8834.jpg" alt="Ապառիկ" class="credit-logo" data-i18n-alt="installment_alt">
 
-                    <input type="text" id="customerName" class="modal-input" placeholder="Ձեր Անունը...">
-                    <input type="tel" id="customerPhone" class="modal-input" placeholder="Ձեր Հեռախոսահամարը...">
+                    <input type="text" id="customerName" class="modal-input" placeholder="Ձեր Անունը..." data-i18n-placeholder="name_ph">
+                    <input type="tel" id="customerPhone" class="modal-input" placeholder="Ձեր Հեռախոսահամարը..." data-i18n-placeholder="phone_ph">
 
                     <div class="modal-action-btns">
-                        <button id="addToCartBtn" class="btn-secondary">Ավելացնել զամբյուղ</button>
-                        <button id="submitOrderBtn" class="btn-primary" style="width: 100%; border: none; cursor: pointer;">Գրանցել պատվեր</button>
+                        <button id="addToCartBtn" class="btn-secondary" data-i18n="add_cart">Ավելացնել զամբյուղ</button>
+                        <button id="submitOrderBtn" class="btn-primary" style="width: 100%; border: none; cursor: pointer;" data-i18n="place_order">Գրանցել պատվեր</button>
                     </div>
                 </div>
             </div>
@@ -119,18 +123,18 @@
     <div class="modal" id="cartModal">
         <div class="modal-content">
             <button class="modal-close" id="closeCartModalBtn">✕</button>
-            <h3 class="modal-title">Ձեր Զամբյուղը</h3>
+            <h3 class="modal-title" data-i18n="cart_title">Ձեր Զամբյուղը</h3>
             <div class="cart-items-list" id="cartItemsContainer"></div>
             <div class="dynamic-price-box">
-                <div class="price-label">Զամբյուղի Ընդհանուր Գումարը</div>
+                <div class="price-label" data-i18n="cart_total">Զամբյուղի Ընդհանուր Գումարը</div>
                 <span class="price-value" id="cartTotalSum">0</span> <span>AMD</span>
             </div>
-            <span class="credit-hint"> Գործում է նաև անտոկոս ապառիկ 3 ամիս ժամկետով</span>
-            <img src="8834.jpg" alt="Ապառիկ" class="credit-logo">
+            <span class="credit-hint" data-i18n="installment"> Գործում է նաև անտոկոս ապառիկ 3 ամիս ժամկետով</span>
+            <img src="8834.jpg" alt="Ապառիկ" class="credit-logo" data-i18n-alt="installment_alt">
             <div id="cartOrderForm">
-                <input type="text" id="cartCustomerName" class="modal-input" placeholder="Ձեր Անունը...">
-                <input type="tel" id="cartCustomerPhone" class="modal-input" placeholder="Ձեր Հեռախոսահամարը...">
-                <button id="submitCartOrderBtn" class="btn-primary" style="width: 100%; border: none; cursor: pointer;">Պատվիրել Զամբյուղից</button>
+                <input type="text" id="cartCustomerName" class="modal-input" placeholder="Ձեր Անունը..." data-i18n-placeholder="name_ph">
+                <input type="tel" id="cartCustomerPhone" class="modal-input" placeholder="Ձեր Հեռախոսահամարը..." data-i18n-placeholder="phone_ph">
+                <button id="submitCartOrderBtn" class="btn-primary" style="width: 100%; border: none; cursor: pointer;" data-i18n="order_cart">Պատվիրել Զամբյուղից</button>
             </div>
         </div>
     </div>
@@ -139,21 +143,21 @@
     <div class="container">
         <div class="footer-grid">
             <div class="footer-box">
-                <h3>Մեր մասին</h3>
-                <p>Michelle Perfume-ը առաջարկում է բարձրակարգ պարֆյումերիա՝ նրբագեղ հոսունությամբ և մինիմալիստական էսթետիկայով։ Յուրաքանչյուր բույր ընտրված է ձեր անհատականությունը ընդգծելու համար։</p>
+                <h3 data-i18n="nav_about">Մեր մասին</h3>
+                <p data-i18n="footer_about_text">Michelle Perfume-ը առաջարկում է բարձրակարգ պարֆյումերիա՝ նրբագեղ հոսունությամբ և մինիմալիստական էսթետիկայով։ Յուրաքանչյուր բույր ընտրված է ձեր անհատականությունը ընդգծելու համար։</p>
             </div>
             <div class="footer-box">
-                <h3>Կապ մեզ հետ</h3>
-                <p>📞 Հեռ.: +374 96 07 60 70</p>
-                <p>📍 Հասցեներ: ք. Երևան, Զորավար Անդրանիկ 143</p>
-                <p>📍 ք. Երևան, Մազմանյան 1(Garaj Masters' Mall) </p>
-                 <p>📍  ք. Երևան, Ամիրյան 12 </p>
+                <h3 data-i18n="footer_contact">Կապ մեզ հետ</h3>
+                <p>📞 <span data-i18n="footer_phone">Հեռ.:</span> +374 96 07 60 70</p>
+                <p>📍 <span data-i18n="footer_addresses">Հասցեներ:</span> <span data-i18n="addr1">ք. Երևան, Զորավար Անդրանիկ 143</span></p>
+                <p>📍 <span data-i18n="addr2">ք. Երևան, Մազմանյան 1 (Garaj Masters' Mall)</span></p>
+                <p>📍 <span data-i18n="addr3">ք. Երևան, Ամիրյան 12</span></p>
                 <p>📧 Gmail: michelle.perfume3@gmail.com</p>
             </div>
         </div>
-        <div class="footer-bottom">&copy; 2026 Michelle Perfume. Բոլոր իրավունքները պաշտպանված են։</div>
+        <div class="footer-bottom" data-i18n="rights">&copy; 2026 Michelle Perfume. Բոլոր իրավունքները պաշտպանված են։</div>
         <div class="footer-social">
-            <a href="tel:096076070" aria-label="Զանգահարել">
+            <a href="tel:096076070" aria-label="Զանգահարել" data-i18n-aria="call">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
             </a>
             <a href="https://www.instagram.com/michelle__perfume/" target="_blank" rel="noopener" aria-label="Instagram">
@@ -184,6 +188,9 @@
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
 
+    // ─── Լեզու ───
+    const t = (k, v) => window.i18n.t(k, v);
+
     document.getElementById('burgerToggle').addEventListener('click', function() {
         this.classList.toggle('open');
         document.getElementById('mobileMenu').classList.toggle('open');
@@ -206,7 +213,7 @@
         const container = document.getElementById('cartItemsContainer');
         container.innerHTML = '';
         if (cart.length === 0) {
-            container.innerHTML = '<p class="cart-empty-text">Ձեր զամբյուղը դատարկ է:</p>';
+            container.innerHTML = `<p class="cart-empty-text">${t('cart_empty')}</p>`;
             document.getElementById('cartTotalSum').innerText = 0;
             document.getElementById('cartOrderForm').style.display = 'none';
             return;
@@ -220,7 +227,7 @@
             div.innerHTML = `
                 <div class="cart-item-info">
                     <div class="cart-item-title">${item.brand} ${item.title}</div>
-                    <div class="cart-item-meta">${item.ml} մլ | [${item.gender}]</div>
+                    <div class="cart-item-meta">${item.ml} ${t('ml')} | [${window.i18n.gender(item.gender)}]</div>
                 </div>
                 <div class="cart-item-price">${item.price} AMD</div>
                 <button class="btn-remove-cart" data-index="${index}">✕</button>
@@ -254,11 +261,12 @@
         cart = getCart();
         if (name && phone && cart.length > 0) {
             const currentDate = new Date().toLocaleDateString('hy-AM');
+            // Պատվերի տեքստը միշտ հայերեն է, որպեսզի ադմինի համար միատեսակ լինի
             const finalItemsString = cart.map(i => `${i.brand} ${i.title} (${i.ml}մլ)`).join(' + ');
             const finalTotal = Number(document.getElementById('cartTotalSum').innerText);
             push(ref(db, 'orders'), { name, phone, items: finalItemsString, total: finalTotal, date: currentDate }).then(() => {
                 sendEmailNotification(name, phone, finalItemsString, finalTotal, currentDate);
-                alert('Ձեր զամբյուղի պատվերն ընդունված է։ Շնորհակալություն։Մեր աշխատակիցը շուտով կկապնվի ձեզ հետ');
+                alert(t('order_ok_cart'));
                 cart = [];
                 saveCart(cart);
                 updateCartUI();
@@ -267,7 +275,7 @@
                 cartModal.classList.remove('active');
             });
         } else {
-            alert('Խնդրում ենք լրացնել անունը և հեռախոսահամարը։');
+            alert(t('fill_name_phone'));
         }
     });
 
@@ -296,7 +304,7 @@
             const wrapper = document.getElementById('prodImgWrapper');
 
             if (images.length === 0) {
-                wrapper.innerHTML = `<div class="swiper-slide" style="display:flex; align-items:center; justify-content:center; color:#999; font-size:14px;">Նկար հասանելի չէ</div>`;
+                wrapper.innerHTML = `<div class="swiper-slide" style="display:flex; align-items:center; justify-content:center; color:#999; font-size:14px;">${t('no_image')}</div>`;
             } else {
                 wrapper.innerHTML = images.map(url =>
                     `<div class="swiper-slide"><img src="${url}" alt="${prod.title || ''}"></div>`
@@ -355,6 +363,36 @@
         }
     }
 
+    // Լեզվից կախված տեքստեր (սեռ, ԲԻՕ, ծավալների ցուցակ, էջի վերնագիր)
+    function refreshProductTexts() {
+        if (!selectedProduct) return;
+        const prod = selectedProduct;
+        const g = window.i18n.gender(prod.gender || 'Unisex');
+        document.getElementById('detGender').innerText = g;
+        document.getElementById('prodGenderTag').innerText = g;
+
+        const bioText = document.getElementById('prodBioText');
+        const bio = window.i18n.pick(prod, 'bio');
+        if (bio && String(bio).trim() !== '') {
+            bioText.innerText = bio;
+            bioText.classList.remove('prod-bio-empty');
+        } else {
+            bioText.innerText = t('no_bio');
+            bioText.classList.add('prod-bio-empty');
+        }
+
+        document.getElementById('prodMlTag').innerText = currentSizesArray.length > 1
+            ? t('volume_opts', { n: currentSizesArray.length })
+            : (currentSizesArray[0] ? `${currentSizesArray[0].ml} ${t('ml')}` : '');
+
+        const opts = document.getElementById('detMlSelect').options;
+        currentSizesArray.forEach((s, idx) => {
+            if (opts[idx]) opts[idx].text = `${s.ml} ${t('ml')}`;
+        });
+
+        document.title = `${prod.title} | Michelle Perfume`;
+    }
+
     function renderProduct(prod) {
         selectedProduct = prod;
 
@@ -365,8 +403,6 @@
         document.getElementById('prodTitleText').innerText = prod.title;
         document.getElementById('prodBrandText').innerText = prod.brand || '---';
         document.getElementById('detBrand').innerText = prod.brand || '---';
-        document.getElementById('detGender').innerText = prod.gender || 'Unisex';
-        document.getElementById('prodGenderTag').innerText = prod.gender || 'Unisex';
 
         document.getElementById('prodPinnedBadge').style.display = prod.pinned ? 'inline-block' : 'none';
         document.getElementById('prodNewBadge').style.display = prod.isNew ? 'inline-block' : 'none';
@@ -389,15 +425,6 @@
             document.getElementById('submitOrderBtn').style.opacity = '0.5';
         }
 
-        const bioText = document.getElementById('prodBioText');
-        if (prod.bio && prod.bio.trim() !== '') {
-            bioText.innerText = prod.bio;
-            bioText.classList.remove('prod-bio-empty');
-        } else {
-            bioText.innerText = 'Այս ապրանքի համար ԲԻՕ դեռ ավելացված չէ։';
-            bioText.classList.add('prod-bio-empty');
-        }
-
         let sizesRaw = prod.sizes;
         if (sizesRaw && !Array.isArray(sizesRaw) && typeof sizesRaw === 'object') {
             sizesRaw = Object.values(sizesRaw);
@@ -405,22 +432,18 @@
         currentSizesArray = Array.isArray(sizesRaw) ? [...sizesRaw] : [];
         currentSizesArray.sort((a, b) => Number(a.ml) - Number(b.ml));
 
-        document.getElementById('prodMlTag').innerText = currentSizesArray.length > 1
-            ? `${currentSizesArray.length} ծավալի տարբերակ`
-            : (currentSizesArray[0] ? `${currentSizesArray[0].ml} մլ` : '');
-
         const mlSelect = document.getElementById('detMlSelect');
         mlSelect.innerHTML = '';
         currentSizesArray.forEach((s, idx) => {
             const option = document.createElement('option');
             option.value = idx;
-            option.text = `${s.ml} մլ`;
+            option.text = `${s.ml} ${t('ml')}`;
             mlSelect.appendChild(option);
         });
         mlSelect.value = 0;
         updatePriceDisplay(currentSizesArray[0]);
 
-        document.title = `${prod.title} | Michelle Perfume`;
+        refreshProductTexts();
     }
 
     document.getElementById('detMlSelect').addEventListener('change', function() {
@@ -433,10 +456,11 @@
             const finalMl = currentSizesArray[selectedIdx] ? currentSizesArray[selectedIdx].ml : '';
             const finalPrice = Number(document.getElementById('detPrice').innerText);
             const cart = getCart();
+            // gender-ը պահվում է բազայի (հայերեն) արժեքով, ցուցադրվում է թարգմանված
             cart.push({ title: selectedProduct.title, brand: selectedProduct.brand || '', gender: selectedProduct.gender || 'Unisex', ml: finalMl, price: finalPrice });
             saveCart(cart);
             document.getElementById('cartCount').innerText = cart.length;
-            alert('Ապրանքն ավելացվեց զամբյուղի մեջ։');
+            alert(t('added'));
         }
     });
 
@@ -462,16 +486,25 @@
             const finalMl = currentSizesArray[selectedIdx] ? currentSizesArray[selectedIdx].ml : '';
             const finalPrice = document.getElementById('detPrice').innerText;
             const currentDate = new Date().toLocaleDateString('hy-AM');
+            // Պատվերի տեքստը միշտ հայերեն է, որպեսզի ադմինի համար միատեսակ լինի
             const orderItemInfo = `${selectedProduct.brand || ''} ${selectedProduct.title} (${finalMl} մլ) [${selectedProduct.gender || 'Unisex'}]`;
             push(ref(db, 'orders'), { name, phone, items: orderItemInfo, total: Number(finalPrice), date: currentDate }).then(() => {
                 sendEmailNotification(name, phone, orderItemInfo, finalPrice, currentDate);
-                alert('Ձեր պատվերն ընդունված է։ Շնորհակալություն գնումների համար: Մեր աշխատակիցը շուտով կկապնվի ձեզ հետ');
+                alert(t('order_ok'));
                 document.getElementById('customerName').value = '';
                 document.getElementById('customerPhone').value = '';
             });
         } else {
-            alert('Խնդրում ենք լրացնել անունը և հեռախոսահամարը։');
+            alert(t('fill_name_phone'));
         }
+    });
+
+    // ─── Լեզվի փոփոխություն ───
+    document.addEventListener('langchange', () => {
+        refreshProductTexts();
+        updateCartUI();
+        // Եթե նկար չկա, "Նկար հասանելի չէ" տեքստը նույնպես թարգմանել
+        if (selectedProduct && getProductImages(selectedProduct).length === 0) renderImageGallery(selectedProduct);
     });
 
     // ─── Բեռնում ենք ապրանքը ըստ URL-ի id պարամետրի ──────────────────────────
