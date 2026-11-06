@@ -1,6 +1,7 @@
 /* Michelle Perfume — լեզվի համակարգ (ARM / ENG / RUS)
    Ընտրված լեզուն պահվում է localStorage-ում և գործում է բոլոր էջերում։ */
 (function () {
+   
     var LANG_KEY = 'michelle_lang';
     var LANGS = ['hy', 'en', 'ru'];
     var LABELS = { hy: 'ARM', en: 'ENG', ru: 'RUS' };
