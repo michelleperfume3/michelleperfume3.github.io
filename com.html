@@ -3,7 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Michelle | Մեր մասին</title>
+    <title data-i18n="title_com">Michelle | Մեր մասին</title>
+
+    <!-- Լեզվի համակարգ -->
+    <script src="i18n.js"></script>
+
     <style>
         body {
             margin: 0;
@@ -146,33 +150,34 @@
 </head>
 <body>
 
-    <a href="index.html" class="back-btn">← Գլխավոր</a>
+    <!-- Լեզվի ընտրիչը ավտոմատ ավելանում է վերևի աջ անկյունում (i18n.js) -->
+    <a href="index.html" class="back-btn" data-i18n="back_home">← Գլխավոր</a>
 
     <div class="container">
         <img src="logo2.jpg" alt="Michelle" class="main-logo">
         
-        <h1>Մեր մասին</h1>
+        <h1 data-i18n="nav_about">Մեր մասին</h1>
         
-        <p class="about-text">
+        <p class="about-text" data-i18n="about_text">
             Մենք ստեղծում ենք բացառիկ բույրեր, որոնք ընդգծում են ձեր յուրահատկությունն ու ոճը։ Յուրաքանչյուր կաթիլ պատմում է իր պատմությունը։
         </p>
 
         <div class="installment-box">
             <img src="8834.jpg" alt="Cash me" class="mini-logo">
-            <div class="installment-text">Մեզ մոտ գործում է ՄԱՍ-ՄԱՍ վճարման համակարգ՝ ՀԵՇՏ ՈՒ ԱՐԱԳ։</div>
+            <div class="installment-text" data-i18n="mas_mas">Մեզ մոտ գործում է ՄԱՍ-ՄԱՍ վճարման համակարգ՝ ՀԵՇՏ ՈՒ ԱՐԱԳ։</div>
         </div>
 
         <div class="contact-info">
-                       <h3>Կապ մեզ հետ</h3>
-                <p>📞 Հեռ.: +374 96 07 60 70</p>
-                <p>📍 Հասցեներ: ք. Երևան, Զորավար Անդրանիկ 143</p>
-                <p>📍 ք. Երևան, Մազմանյան 1(Garaj Masters' Mall) </p>
-                 <p>📍  ք. Երևան, Ամիրյան 12 </p>
-                <p>📧 Gmail: michelle.perfume3@gmail.com</p>
+            <h3 data-i18n="footer_contact">Կապ մեզ հետ</h3>
+            <p>📞 <span data-i18n="footer_phone">Հեռ.:</span> +374 96 07 60 70</p>
+            <p>📍 <span data-i18n="footer_addresses">Հասցեներ:</span> <span data-i18n="addr1">ք. Երևան, Զորավար Անդրանիկ 143</span></p>
+            <p>📍 <span data-i18n="addr2">ք. Երևան, Մազմանյան 1 (Garaj Masters' Mall)</span></p>
+            <p>📍 <span data-i18n="addr3">ք. Երևան, Ամիրյան 12</span></p>
+            <p>📧 Gmail: michelle.perfume3@gmail.com</p>
         </div>
 
         <div class="footer-social">
-            <a href="tel:096076070" aria-label="Զանգահարել">
+            <a href="tel:096076070" aria-label="Զանգահարել" data-i18n-aria="call">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
             </a>
             <a href="https://www.instagram.com/michelle__perfume/" target="_blank" rel="noopener" aria-label="Instagram">
