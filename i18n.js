@@ -224,14 +224,13 @@
             document.querySelectorAll('[data-i18n-aria]').forEach(function (el) {
                 el.setAttribute('aria-label', i18n.t(el.getAttribute('data-i18n-aria')));
             });
-            var sw = document.querySelector('.lang-switch');
-            if (sw) {
-                var idx = LANGS.indexOf(i18n.lang);
+            var idx = LANGS.indexOf(i18n.lang);
+            document.querySelectorAll('.lang-switch').forEach(function (sw) {
                 sw.querySelector('.lang-pill').style.transform = 'translateX(' + (idx * 100) + '%)';
                 sw.querySelectorAll('button').forEach(function (b) {
                     b.classList.toggle('active', b.getAttribute('data-lang') === i18n.lang);
                 });
-            }
+            });
         },
         setLang: function (l) {
             if (LANGS.indexOf(l) === -1 || l === i18n.lang) return;
@@ -252,15 +251,17 @@
         '.lang-switch button:hover{color:#000;}' +
         '.lang-switch button.active,.lang-switch button.active:hover{color:#fff;}' +
         '.lang-switch.fixed{position:fixed;top:20px;right:20px;margin:0;z-index:3000;}' +
-        '@media (max-width:480px){.lang-switch{margin-right:6px;}.lang-switch button{font-size:10px;padding:7px 7px;letter-spacing:.3px;}.lang-switch.fixed{top:14px;right:10px;}}';
+        '@media (max-width:480px){.lang-switch{margin-right:6px;}.lang-switch button{font-size:10px;padding:7px 7px;letter-spacing:.3px;}.lang-switch.fixed{top:14px;right:10px;}}' +
+        /* Երբ burger մենյուն ակտիվ է (բջջային/փոքր էկրան), header-ի ընտրիչը թաքնվում է՝ լեզուն ընտրվում է մենյուից */
+        'body.lang-in-menu .lang-switch.lang-header{display:none;}' +
+        '.lang-menu-item{list-style:none;display:flex;justify-content:center;width:100%;margin-top:28px;padding-top:24px;border-top:1px solid rgba(0,0,0,.1);}' +
+        '.lang-switch.lang-menu{display:grid;width:min(300px,86%);margin:0;padding:4px;background:#fff;box-shadow:0 4px 16px rgba(0,0,0,.1);}' +
+        '.lang-switch.lang-menu .lang-pill{top:4px;bottom:4px;left:4px;width:calc((100% - 8px)/3);}' +
+        '.lang-switch.lang-menu button{font-size:15px;padding:13px 10px;letter-spacing:.8px;}';
 
-    function mountSwitcher() {
-        var style = document.createElement('style');
-        style.textContent = css;
-        document.head.appendChild(style);
-
+    function buildSwitcher(extraClass) {
         var sw = document.createElement('div');
-        sw.className = 'lang-switch';
+        sw.className = 'lang-switch ' + extraClass;
         sw.setAttribute('role', 'group');
         sw.setAttribute('aria-label', 'Language');
         var html = '<span class="lang-pill"></span>';
@@ -272,10 +273,42 @@
             var b = e.target.closest('button[data-lang]');
             if (b) i18n.setLang(b.getAttribute('data-lang'));
         });
+        return sw;
+    }
+
+    function syncLayout() {
+        var burger = document.getElementById('burgerToggle');
+        var inMenu = !!burger && window.getComputedStyle(burger).display !== 'none';
+        document.body.classList.toggle('lang-in-menu', inMenu);
+    }
+
+    function mountSwitcher() {
+        var style = document.createElement('style');
+        style.textContent = css;
+        document.head.appendChild(style);
 
         var host = document.querySelector('.header-actions');
-        if (host) host.insertBefore(sw, host.firstChild);
-        else { sw.classList.add('fixed'); document.body.appendChild(sw); }
+        if (host) {
+            host.insertBefore(buildSwitcher('lang-header'), host.firstChild);
+        } else {
+            var fixed = buildSwitcher('lang-header fixed');
+            document.body.appendChild(fixed);
+        }
+
+        /* Երկրորդ ընտրիչ՝ բջջային մենյուի ներսում */
+        var menuList = document.querySelector('#mobileMenu .mobile-menu-links');
+        var overlay = document.getElementById('mobileMenu');
+        if (menuList) {
+            var li = document.createElement('li');
+            li.className = 'lang-menu-item';
+            li.appendChild(buildSwitcher('lang-menu'));
+            menuList.appendChild(li);
+        } else if (overlay) {
+            overlay.appendChild(buildSwitcher('lang-menu'));
+        }
+
+        syncLayout();
+        window.addEventListener('resize', syncLayout);
     }
 
     function init() { mountSwitcher(); i18n.apply(); }
