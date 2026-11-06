@@ -1,7 +1,6 @@
 /* Michelle Perfume — լեզվի համակարգ (ARM / ENG / RUS)
    Ընտրված լեզուն պահվում է localStorage-ում և գործում է բոլոր էջերում։ */
 (function () {
-   
     var LANG_KEY = 'michelle_lang';
     var LANGS = ['hy', 'en', 'ru'];
     var LABELS = { hy: 'ARM', en: 'ENG', ru: 'RUS' };
@@ -255,8 +254,10 @@
         '@media (max-width:480px){.lang-switch{margin-right:6px;}.lang-switch button{font-size:10px;padding:7px 7px;letter-spacing:.3px;}.lang-switch.fixed{top:14px;right:10px;}}' +
         /* Երբ burger մենյուն ակտիվ է (բջջային/փոքր էկրան), header-ի ընտրիչը թաքնվում է՝ լեզուն ընտրվում է մենյուից */
         'body.lang-in-menu .lang-switch.lang-header{display:none;}' +
-        '.lang-menu-item{list-style:none;display:flex;justify-content:center;width:100%;margin-top:28px;padding-top:24px;border-top:1px solid rgba(0,0,0,.1);}' +
-        '.lang-switch.lang-menu{display:grid;width:min(300px,86%);margin:0;padding:4px;background:#fff;box-shadow:0 4px 16px rgba(0,0,0,.1);}' +
+        '.mobile-menu-links .lang-menu-item{list-style:none;display:flex;justify-content:center;width:min(300px,86vw);margin:40px auto 0;padding-top:28px;border-top:1px solid rgba(0,0,0,.1);}' +
+        '.lang-switch.lang-menu{display:grid;width:100%;margin:0;padding:4px;background:#fff;box-shadow:0 4px 16px rgba(0,0,0,.1);}' +
+        /* Մենյուն բաց ժամանակ header-ը (burger/X կոճակով) մնում է overlay-ի վերևում, որպեսզի կարողանան փակել */
+        '.main-header:has(.burger-menu.open){z-index:1003;}' +
         '.lang-switch.lang-menu .lang-pill{top:4px;bottom:4px;left:4px;width:calc((100% - 8px)/3);}' +
         '.lang-switch.lang-menu button{font-size:15px;padding:13px 10px;letter-spacing:.8px;}';
 
@@ -316,3 +317,10 @@
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
     else init();
 })();
+
+
+
+
+
+
+
