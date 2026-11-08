@@ -1,6 +1,7 @@
 /* Google tag (GTM-NXBFK8HS) - ճիշտ այն կոդը, որը տվել է Google-ը (Install manually).
    Բեռնվում է բոլոր հանրային էջերում, քանի որ i18n.js-ը ներառված է դրանցում (admin.html-ում՝ ոչ). */
 (function () {
+    if (document.querySelector('script[src*="GTM-NXBFK8HS"]')) return; /* արդեն դրված է էջի <head>-ում (գլխավոր էջեր) */
     var g = document.createElement('script');
     g.async = true;
     g.src = 'https://www.googletagmanager.com/gtm.js?id=GTM-NXBFK8HS';
