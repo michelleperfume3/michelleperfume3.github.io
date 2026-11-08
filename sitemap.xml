@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+      <loc>https://michelleperfume.am/</loc>
+      <xhtml:link rel="alternate" hreflang="hy" href="https://michelleperfume.am/"/>
+      <xhtml:link rel="alternate" hreflang="ru" href="https://michelleperfume.am/ru/"/>
+      <xhtml:link rel="alternate" hreflang="en" href="https://michelleperfume.am/en/"/>
+      <xhtml:link rel="alternate" hreflang="x-default" href="https://michelleperfume.am/"/>
+  </url>
+  <url>
+      <loc>https://michelleperfume.am/ru/</loc>
+      <xhtml:link rel="alternate" hreflang="hy" href="https://michelleperfume.am/"/>
+      <xhtml:link rel="alternate" hreflang="ru" href="https://michelleperfume.am/ru/"/>
+      <xhtml:link rel="alternate" hreflang="en" href="https://michelleperfume.am/en/"/>
+      <xhtml:link rel="alternate" hreflang="x-default" href="https://michelleperfume.am/"/>
+  </url>
+  <url>
+      <loc>https://michelleperfume.am/en/</loc>
+      <xhtml:link rel="alternate" hreflang="hy" href="https://michelleperfume.am/"/>
+      <xhtml:link rel="alternate" hreflang="ru" href="https://michelleperfume.am/ru/"/>
+      <xhtml:link rel="alternate" hreflang="en" href="https://michelleperfume.am/en/"/>
+      <xhtml:link rel="alternate" hreflang="x-default" href="https://michelleperfume.am/"/>
+  </url>
+  <url>
+      <loc>https://michelleperfume.am/com.html</loc>
+      <xhtml:link rel="alternate" hreflang="hy" href="https://michelleperfume.am/com.html"/>
+      <xhtml:link rel="alternate" hreflang="ru" href="https://michelleperfume.am/ru/com.html"/>
+      <xhtml:link rel="alternate" hreflang="en" href="https://michelleperfume.am/en/com.html"/>
+      <xhtml:link rel="alternate" hreflang="x-default" href="https://michelleperfume.am/com.html"/>
+  </url>
+  <url>
+      <loc>https://michelleperfume.am/ru/com.html</loc>
+      <xhtml:link rel="alternate" hreflang="hy" href="https://michelleperfume.am/com.html"/>
+      <xhtml:link rel="alternate" hreflang="ru" href="https://michelleperfume.am/ru/com.html"/>
+      <xhtml:link rel="alternate" hreflang="en" href="https://michelleperfume.am/en/com.html"/>
+      <xhtml:link rel="alternate" hreflang="x-default" href="https://michelleperfume.am/com.html"/>
+  </url>
+  <url>
+      <loc>https://michelleperfume.am/en/com.html</loc>
+      <xhtml:link rel="alternate" hreflang="hy" href="https://michelleperfume.am/com.html"/>
+      <xhtml:link rel="alternate" hreflang="ru" href="https://michelleperfume.am/ru/com.html"/>
+      <xhtml:link rel="alternate" hreflang="en" href="https://michelleperfume.am/en/com.html"/>
+      <xhtml:link rel="alternate" hreflang="x-default" href="https://michelleperfume.am/com.html"/>
+  </url>
+</urlset>
