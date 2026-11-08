@@ -1,3 +1,16 @@
+/* Google tag (GTM-NXBFK8HS) - ճիշտ այն կոդը, որը տվել է Google-ը (Install manually).
+   Բեռնվում է բոլոր հանրային էջերում, քանի որ i18n.js-ը ներառված է դրանցում (admin.html-ում՝ ոչ). */
+(function () {
+    var g = document.createElement('script');
+    g.async = true;
+    g.src = 'https://www.googletagmanager.com/gtm.js?id=GTM-NXBFK8HS';
+    var first = document.getElementsByTagName('script')[0];
+    first.parentNode.insertBefore(g, first);
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = function () { window.dataLayer.push(arguments); };
+    window.gtag('js', new Date());
+})();
+
 /* Michelle Perfume — լեզվի համակարգ (ARM / ENG / RUS)
    Լեզուն որոշվում է էջի <html lang> ատրիբուտից (/ , /ru/ , /en/ հասցեներ)։ */
 (function () {
@@ -315,10 +328,3 @@
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
     else init();
 })();
-
-
-
-
-
-
-
